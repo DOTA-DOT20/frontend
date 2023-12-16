@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Comfortaa } from 'next/font/google'
 import Header from '@/components/Header'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Comfortaa({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Create Next App',

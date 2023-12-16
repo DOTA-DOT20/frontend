@@ -5,9 +5,19 @@
 :root {
   --foreground: #fff;
   --background: #161313;
+  --color-primary: #DE0376;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
+}
+
+.btn {
+  min-width: 160px;
+  padding: 0 10px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 20px;
+  background: var(--color-primary);
 }
