@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Comfortaa } from 'next/font/google'
 import Header from '../components/Footer'
 import Footer from '../components/Header'
-import RecoilRootWrapper from '@/components/RecoilRootWrapper'
+import Providers from '@/components/Providers'
 import './globals.css'
 
 const inter = Comfortaa({ subsets: ['latin'] })
@@ -20,11 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <RecoilRootWrapper>
+        <Providers>
           <Header />
           {children}
           <Footer/>
-        </RecoilRootWrapper>
+        </Providers>
       </body>
     </html>
   )

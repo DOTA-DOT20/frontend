@@ -1,6 +1,7 @@
 'use client';
 
 import Image from "next/image";
+import {Button} from '@nextui-org/button';
 import NavLink from '../NavLink'
 import styles from './index.module.css'
 
