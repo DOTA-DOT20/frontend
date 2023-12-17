@@ -1,11 +1,10 @@
 import type { Metadata } from 'next'
-import { Comfortaa } from 'next/font/google'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Providers from '@/components/Providers'
+import { fonts } from './fonts'
 import './globals.css'
 
-const inter = Comfortaa({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -19,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={fonts.comfortaa.className}>
         <Providers>
           <Header />
           {children}
