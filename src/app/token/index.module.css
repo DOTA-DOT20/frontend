@@ -18,3 +18,19 @@
 .progressDone {
   background-color: #DE0376;
 }
+
+.searchInput {
+  background-color: transparent;
+}
+
+.searchInput:focus {
+  outline: none;
+}
+
+.searchButton {
+  background: #DE0376;
+}
+
+.searchBox {
+  border-radius: 30px;
+}
