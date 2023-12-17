@@ -1,3 +1,5 @@
+'use client';
+
 import Image from "next/image";
 import NavLink from '../NavLink'
 import styles from './index.module.css'
@@ -7,6 +9,7 @@ import currencyIcon from '@/icons/currency.svg'
 import starIcon from '@/icons/star.svg'
 import compassIcon from '@/icons/compass.svg'
 import walletIcon from '@/icons/wallet.svg'
+import {connectWallet} from "@/hooks/usePolkadot";
 
 const menus = [
     {
@@ -37,6 +40,11 @@ const menus = [
 ]
 
 export default function Header() {
+
+    const handleConnect = () => {
+        connectWallet()
+    }
+
     return <div>
         <h1 className={styles.header}>
             <div className={styles.logo}>
@@ -64,7 +72,7 @@ export default function Header() {
                    )
                 })}
             </div>
-            <button className="btn bg-pink-500 hover:bg-sky-700">
+            <button className="btn bg-pink-500 hover:bg-sky-700" onClick={handleConnect}>
                 Connect Wallet
             </button>
         </h1>

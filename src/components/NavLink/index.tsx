@@ -5,8 +5,8 @@ import { usePathname } from 'next/navigation'
 import {PropsWithChildren} from "react";
 
 type NavLinkProps =  LinkProps & PropsWithChildren<{
-    exact: boolean,
     href: string
+    exact?: boolean,
     className?: string
 }>
 
