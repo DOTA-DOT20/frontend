@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Comfortaa } from 'next/font/google'
-import Header from '@/components/Header'
+import Header from '../components/Footer'
+import Footer from '../components/Header'
 import RecoilRootWrapper from '@/components/RecoilRootWrapper'
 import './globals.css'
 
@@ -19,9 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header />
         <RecoilRootWrapper>
+          <Header />
           {children}
+          <Footer/>
         </RecoilRootWrapper>
       </body>
     </html>

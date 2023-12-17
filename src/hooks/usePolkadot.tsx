@@ -8,7 +8,7 @@ export const connectWallet = async () => {
         console.log("Please create cess-hacknet chain account.");
         return;
     }
-    const allAccounts = await web3Accounts(); // 获取所有波卡钱包账户
+    const allAccounts = await web3Accounts();
     console.log("allAccounts========", allAccounts);
     if (allAccounts.length == 0) {
         console.log("Please create account fisrt.");
