@@ -1,3 +1,5 @@
+'use client';
+
 import styles from "@/app/inscribe/index.module.css";
 
 export default function Home() {
