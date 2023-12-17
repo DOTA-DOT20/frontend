@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import {Button} from '@nextui-org/button';
+import {Button, Tooltip} from '@nextui-org/react';
 import NavLink from '../NavLink'
 import styles from './index.module.css'
 
@@ -32,11 +32,13 @@ const menus = [
         name: 'EXPLORER',
         route: '/explorer',
         icon: compassIcon,
+        disabled: true
     },
     {
         name: 'BALANCE',
         route: '/own',
-        icon: walletIcon
+        icon: walletIcon,
+        disabled: true
     }
 ]
 
@@ -56,21 +58,33 @@ export default function Header() {
                     height={40}
                     priority
                 />
+
             </div>
             <div className={styles.menu}>
                 {menus.map((item) => {
                     return (
-                       <NavLink key={item.route} href={item.route} className={styles.menuItem}>
-                           <Image
-                              src={item.icon}
-                              width={24}
-                              height={24}
-                              alt={item.name}
-                              className={styles.menuIcon}
-                           />
-                           {item.name}
-                       </NavLink>
-                   )
+                        item.disabled ? <Tooltip content="coming soon">
+                            <span className={styles.menuItem}>
+                                <Image
+                                    src={item.icon}
+                                    width={24}
+                                    height={24}
+                                    alt={item.name}
+                                    className={styles.menuIcon}
+                                />
+                            {item.name}
+                        </span>
+                        </Tooltip> : <NavLink key={item.route} href={item.route} className={styles.menuItem}>
+                            <Image
+                                src={item.icon}
+                                width={24}
+                                height={24}
+                                alt={item.name}
+                                className={styles.menuIcon}
+                            />
+                            {item.name}
+                        </NavLink>
+                    )
                 })}
             </div>
             <Button className="btn bg-pink-500 hover:bg-sky-700 color-white" onClick={handleConnect}>

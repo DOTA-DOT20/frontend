@@ -26,10 +26,10 @@ const config: Config = {
   },
   darkMode: "class",
   plugins: [nextui({
-    defaultTheme: "light",
-    defaultExtendTheme: "light",
+    defaultTheme: "dark",
+    defaultExtendTheme: "dark",
     themes: {
-      light: {
+      dark: {
         colors: {
           default: '#fff',
           primary: '#DE0376',

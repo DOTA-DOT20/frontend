@@ -16,7 +16,7 @@ export default function Home() {
     }
 
     return (
-        <main className="min-h-screen p-24">
+        <div className="p-12">
             <h2 className={styles.title}>Dota Inscribe</h2>
             <p className={styles.subTitle}>Start your new inscribe on dot-20</p>
             <div className={styles.content}>
@@ -61,6 +61,6 @@ export default function Home() {
                   </div>
                 </> }
             </div>
-        </main>
+        </div>
     )
 }

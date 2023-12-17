@@ -1,39 +1,7 @@
-.header {
-    --header-background: #252024;
-    color: #fff;
-    height: 80px;
-    background-color: var(--header-background);
-    padding: 0 40px;
+.footer {
+    padding: 36px 0;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.logo {
-}
-
-
-.menu {
-    display: flex;
-    flex-direction: row;
     justify-content: center;
-    flex: 1;
-    margin: 0 40px;
-    gap: 20px;
-}
-
-.menuItem {
-    padding: 5px 0;
-    line-height: 24px;
-}
-
-.menuItem:global(.active) {
-    border-bottom: 1px solid #fff;
-}
-
-
-.menuIcon {
-  display: inline-block;
-  margin-right: 8px;
-    margin-top: -2px;
+    gap: 24px;
+    align-items: center;
 }

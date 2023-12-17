@@ -31,6 +31,9 @@
     border-bottom: 1px solid #fff;
 }
 
+span.menuItem {
+    color: rgba(255, 255, 255, 0.5);
+}
 
 .menuIcon {
   display: inline-block;
