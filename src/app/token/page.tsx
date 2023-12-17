@@ -1,5 +1,3 @@
-'use client';
-
 import { getTokens } from "@/app/utils/get-tokens"
 import  styles from "./index.module.css";
 
