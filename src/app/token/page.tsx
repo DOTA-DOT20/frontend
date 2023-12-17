@@ -1,9 +1,8 @@
 "use client"
 import { getTokens } from "@/app/utils/get-tokens"
 import  styles from "./index.module.css";
-import { getTickList } from '@/request/index'
 import React, { useEffect, useState } from "react";
-import {Pagination, Button} from "@nextui-org/react";
+import {Pagination} from "@nextui-org/react";
 
 export default function Home() {
     const [ticks, setTicks] = useState([])
@@ -20,10 +19,6 @@ export default function Home() {
         if (keyword) {
             data['keyword'] = keyword
         }
-        // const res: any = await getTickList(data)
-        // if (res.code == 0) {
-        //     setTicks(res.ticks)
-        // }
         const res = await getTokens()
         setTicks(res.tokens)
       } catch (error: any) {
