@@ -17,8 +17,8 @@ export default function Home() {
 
     return (
         <main className="min-h-screen p-24">
-            <h2>Dota Inscribe</h2>
-            <p>Start your new inscribe on dot-20</p>
+            <h2 className={styles.title}>Dota Inscribe</h2>
+            <p className={styles.subTitle}>Start your new inscribe on dot-20</p>
             <div className={styles.content}>
                 <div className={styles.contentHead}>
                     <RadioGroup
@@ -33,7 +33,8 @@ export default function Home() {
                         <Radio value="transfer">Transfer</Radio>
                     </RadioGroup>
                 </div>
-                {checkedType === 'mint' && <div className={styles.contentBody}>
+                {checkedType === 'mint' && <>
+                  <div className={styles.contentBody}>
                     <div className={styles.form}>
                       <div className={styles.formItem}>
                         <label htmlFor="name">Ticket</label>
@@ -54,7 +55,11 @@ export default function Home() {
                         />
                       </div>
                     </div>
-                </div> }
+                  </div>
+                  <div className={styles.contentFooter}>
+                    123
+                  </div>
+                </> }
             </div>
         </main>
     )
