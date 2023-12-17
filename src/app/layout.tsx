@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Comfortaa } from 'next/font/google'
-import Header from '../components/Footer'
-import Footer from '../components/Header'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 import Providers from '@/components/Providers'
 import './globals.css'
 

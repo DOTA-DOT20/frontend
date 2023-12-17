@@ -73,9 +73,9 @@ export default function Header() {
                    )
                 })}
             </div>
-            <button className="btn bg-pink-500 hover:bg-sky-700" onClick={handleConnect}>
+            <Button className="btn bg-pink-500 hover:bg-sky-700 color-white" onClick={handleConnect}>
                 Connect Wallet
-            </button>
+            </Button>
         </h1>
 
     </div>

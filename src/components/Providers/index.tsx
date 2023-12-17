@@ -3,7 +3,7 @@
 import {NextUIProvider} from '@nextui-org/react'
 import {RecoilRoot} from "recoil";
 
-export function Providers({children}: { children: React.ReactNode }) {
+function Providers({children}: { children: React.ReactNode }) {
     return (
         <RecoilRoot>
             <NextUIProvider>
@@ -12,3 +12,5 @@ export function Providers({children}: { children: React.ReactNode }) {
         </RecoilRoot>
     )
 }
+
+export default Providers
