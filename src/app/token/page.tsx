@@ -1,12 +1,46 @@
+"use client"
 import { getTokens } from "@/app/utils/get-tokens"
 import  styles from "./index.module.css";
+import { getTickList } from '@/request/index'
+import React, { useEffect, useState } from "react";
+import {Pagination, Button} from "@nextui-org/react";
 
-export default async function Home() {
-    const data = await getTokens(1, 1)
+export default function Home() {
+    const [ticks, setTicks] = useState([])
+    const [keyword, setKeyword] = useState('')
+    const [page, setPage] = useState(1)
+    const pageSize = 10
+  
+    const getTicks = async () => {
+      try {
+        let data: any = {
+            page_index: page,
+            page_size: pageSize
+        }
+        if (keyword) {
+            data['keyword'] = keyword
+        }
+        // const res: any = await getTickList(data)
+        // if (res.code == 0) {
+        //     setTicks(res.ticks)
+        // }
+        const res = await getTokens()
+        setTicks(res.tokens)
+      } catch (error: any) {
+        console.log(error.message)
+      }
+    }
+    useEffect(() => {
+        getTicks()
+    }, [page, keyword])
+  
+    const keywordChange = (e) => {
+        setKeyword(e.target.value)
+    }
     return (
         <main className="min-h-screen p-24">
             <div className={`max-w-3xl mx-auto flex justify-between items-center border px-5 py-2 mb-16 ${styles.searchBox}`}>
-                <input type="text" className={`grow h-12 rounded-xl px-5 py-4 ${styles.searchInput}`} placeholder="Please input token name..." />
+                <input type="text" className={`grow h-12 rounded-xl px-5 py-4 ${styles.searchInput}`} placeholder="Please input token name..." onChange={keywordChange} />
                 <button className={`w-40 h-10 rounded-3xl text-white ${styles.searchButton}`}>Search</button>
             </div>
             <div className={`w-full border px-5 py-4 ${styles.tableContainer}`}>
@@ -23,7 +57,7 @@ export default async function Home() {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.tokens.map((token, index) => {
+                        {ticks.map((token, index) => {
                             const progressDoneWidth = token.progress / 100 * 200;
                             return (
                                 <tr key={token.name} className={`h-24 border-b ${styles.tableRow}`}>
@@ -44,6 +78,14 @@ export default async function Home() {
                     </tbody>
                 </table>
             </div>
+            <Pagination
+                total={10}
+                classNames={{
+                    wrapper: "gap-10 overflow-visible h-8 rounded border-divider mt-10 ml-auto mr-auto",
+                    item: "w-8 h-8 text-small rounded-none bg-transparent",
+                    cursor: "bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold",
+                }}
+            />
         </main>
     )
 }
