@@ -30,7 +30,7 @@ export default function Home() {
                     >
                         <Radio value="mint">Mint</Radio>
                         <Radio value="deploy">Deploy</Radio>
-                        <Radio value="transfer">Transfer</Radio>
+                        <Radio value="transfer" isDisabled={true}>Transfer</Radio>
                     </RadioGroup>
                 </div>
                 {checkedType === 'mint' && <>
