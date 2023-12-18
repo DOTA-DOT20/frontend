@@ -81,7 +81,7 @@ export default function Home() {
                     </thead>
                     <tbody>
                         {ticks.map((token, index) => {
-                            const progress = Math.floor(token.supply / token.max * 100);
+                            const progress = (token.supply / token.max * 100).toFixed(2);
                             const progressDoneWidth = progress / 100 * 200;
                             return (
                                 <tr key={token.tick} className={`h-24 border-b ${styles.tableRow}`}>
