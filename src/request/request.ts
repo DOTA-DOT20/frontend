@@ -1,5 +1,5 @@
 import axios from 'axios';
-let baseURL = 'http://47.242.70.156:6666'
+let baseURL = 'https://api.dota.fyi'
 axios.defaults.timeout = 100000;
 
 axios.interceptors.request.use((config: any) => {
@@ -17,14 +17,6 @@ axios.interceptors.response.use(response => {
 }, err => {
   return Promise.reject(err)
 })
-
-
-/**
- * 封装post请求
- * @param url
- * @param data
- * @returns {Promise}
- */
 
 export const post = (url, data = {}) => {
   url = `${baseURL}${url}`
