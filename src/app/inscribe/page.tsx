@@ -32,7 +32,7 @@ export default function Home() {
             if (type && type === 'deploy') {
                 const header = await api.rpc.chain.getHeader()
                 const blockNumber = header.number.toNumber()
-                info.start = blockNumber + 10
+                info.start = blockNumber
             }
             
             const injector = await getInjectedAccount()
