@@ -26,7 +26,7 @@ export default function Home() {
 
     const handleMint = async () => {
         if(selectedAccount?.address) {
-            const api = getApi()
+            const api = await getApi()
             const injector = await getInjectedAccount()
             if(injector) {
                 api.tx.balances
