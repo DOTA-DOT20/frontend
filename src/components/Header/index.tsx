@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import {Button, Tooltip} from '@nextui-org/react';
+import { web3Accounts, isWeb3Injected } from "@polkadot/extension-dapp";
 import NavLink from '../NavLink'
 import styles from './index.module.css'
 
@@ -10,7 +11,11 @@ import currencyIcon from '@/icons/currency.svg'
 import starIcon from '@/icons/star.svg'
 import compassIcon from '@/icons/compass.svg'
 import walletIcon from '@/icons/wallet.svg'
-import {connectWallet} from "@/hooks/usePolkadot";
+import {connectWallet, useConnectWallet} from "@/hooks/usePolkadot";
+import {useEffect, useState} from "react";
+import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
+import {useRecoilState} from "recoil";
+import {accountState} from "@/stores/account";
 
 const menus = [
     {
@@ -42,10 +47,20 @@ const menus = [
     }
 ]
 
+function shotAddress(address: string) {
+    return address.slice(0, 6) + '...' + address.slice(-6)
+}
+
 export default function Header() {
 
-    const handleConnect = () => {
-        connectWallet()
+    const { selectedAccount, connect } = useConnectWallet()
+
+    const handleConnect = async () => {
+        if(isWeb3Injected) {
+            await connect()
+        } else {
+            console.log('eee')
+        }
     }
 
     return <div>
@@ -87,9 +102,14 @@ export default function Header() {
                     )
                 })}
             </div>
-            <Button className="btn bg-pink-500 hover:bg-sky-700 color-white" onClick={handleConnect}>
-                Connect Wallet
-            </Button>
+            {
+                selectedAccount ? <Button className="btn bg-pink-500 hover:bg-sky-700 color-white">
+                    <span>{selectedAccount.meta.name}</span>
+                </Button> : <Button className="btn bg-pink-500 hover:bg-sky-700 color-white" onClick={handleConnect}>
+                    Connect Wallet
+                </Button>
+            }
+
         </h1>
 
     </div>
