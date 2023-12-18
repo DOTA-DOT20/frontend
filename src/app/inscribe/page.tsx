@@ -6,24 +6,48 @@ import {ChangeEvent, useEffect, useMemo, useState} from "react";
 import {useRecoilState} from "recoil";
 import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
 import {accountState} from "@/stores/account";
-import {web3FromAddress} from "@polkadot/extension-dapp";
+import {isWeb3Injected, web3FromAddress} from "@polkadot/extension-dapp";
+import {useConnectWallet} from "@/hooks/usePolkadot";
+import {async} from "rxjs";
 
 
 export default function Home() {
-    const [selectedAccount] = useRecoilState<InjectedAccountWithMeta>(accountState);
-
     const [checkedType, setChecked] = useState('mint')
 
     const [tick, setTick] = useState("DOTA");
     const [amount, setAmount] = useState("1000");
+
+    const { connect, getApi, getInjectedAccount, selectedAccount } = useConnectWallet()
+
     const handleChanged = (event: ChangeEvent<any>) => {
         setChecked(event.target.value)
     }
 
 
-    const handleMint = () => {
+    const handleMint = async () => {
         if(selectedAccount?.address) {
+            const api = getApi()
+            const injector = await getInjectedAccount()
+            if(injector) {
+                api.tx.balances
+                    .transfer(selectedAccount.address, 123456)
+                    .signAndSend(selectedAccount.address, { signer: injector.signer }, (status) => {
+                        console.log(status);
+                    });
+            }
+
+        } else {
+            await connect()
         }
+    }
+
+    const handleConnet = async () => {
+        if(isWeb3Injected) {
+            await connect()
+        } else {
+            console.log('eee')
+        }
+
     }
 
     return (
@@ -68,12 +92,22 @@ export default function Home() {
                     </div>
                   </div>
                   <div className={styles.contentFooter}>
-                    <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 block flex-1 color-white"
-                            size="lg"
-                            onClick={handleMint}
-                    >
-                      MINT
-                    </Button>
+                      {
+                            selectedAccount?.address ?
+                                <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 block flex-1 color-white"
+                                        size="lg"
+                                        onClick={handleMint}
+                                >
+                                    MINT
+                                </Button>
+                                :
+                                <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 block flex-1 color-white"
+                                        size="lg"
+                                        onClick={handleConnet}
+                                >
+                                    CONNECT WALLET
+                                </Button>
+                        }
                   </div>
                 </> }
             </div>

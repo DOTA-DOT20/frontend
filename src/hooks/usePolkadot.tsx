@@ -1,10 +1,15 @@
 "use client"
 
+const { ApiPromise, WsProvider, Keyring } = require('@polkadot/api');
 import {web3Accounts, web3Enable, web3FromAddress} from "@polkadot/extension-dapp";
 import {useRecoilState} from "recoil";
 import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
 import {accountState} from "@/stores/account";
 import {useMemo, useState} from "react";
+
+const provider = new WsProvider('wss://rpc.polkadot.io');
+
+const ss58Format = 0;
 
 export const useConnectWallet = () => {
     const [selectedAccount, setSelectedAccount] = useRecoilState<InjectedAccountWithMeta>(accountState);
@@ -32,6 +37,9 @@ export const useConnectWallet = () => {
             connect,
             selectedAccount,
             allAccounts,
+            getApi: () => {
+                return ApiPromise.create({provider})
+            },
             getInjectedAccount: async () => {
                 if(selectedAccount?.address) {
                     return web3FromAddress(selectedAccount.address)
