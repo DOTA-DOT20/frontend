@@ -15,6 +15,7 @@ export default function Home() {
 
     const [tick, setTick] = useState("DOTA");
     const [amount, setAmount] = useState("500000");
+    const [isLoading, setIsLoading] = useState(false);
 
     const { connect, getApi, getInjectedAccount, selectedAccount } = useConnectWallet()
 
@@ -24,20 +25,39 @@ export default function Home() {
         setChecked(event.target.value)
     }
 
-    const transfer = async (info: any) => {
-        const api = await getApi()
-        const injector = await getInjectedAccount()
-        if (injector) {
-            api.tx.utility.batchAll([
-            api.tx.balances.transferKeepAlive(selectedAccount.address, 1 * 1e12),
-            api.tx.system.remark(JSON.stringify(info)),
-            ]).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: any) => {
-            if (result.status.isInBlock) {
-            } else if (result.status.isFinalized) {
-                let blockNumber = result.blockNumber.toNumber()
-                console.log('success! blockNumber:', blockNumber)
+    const transfer = async (info: any, type: any) => {
+        try {
+            const api = await getApi()
+            // get block number
+            if (type && type === 'deploy') {
+                const header = await api.rpc.chain.getHeader()
+                const blockNumber = header.number.toNumber()
+                info.start = blockNumber
             }
-            });
+            
+            const injector = await getInjectedAccount()
+            if (injector) {
+                api.tx.utility.batchAll([
+                    api.tx.balances.transferKeepAlive(selectedAccount.address, 1 * 1e12),
+                    api.tx.system.remark(JSON.stringify(info)),
+                ]).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: any) => {
+                    if (result.status.isInBlock) {
+                    } else if (result.status.isFinalized) {
+                        let blockNumber = result.blockNumber.toNumber()
+                        console.log('success! blockNumber:', blockNumber)
+                        setIsLoading(false)
+                    }
+                }, (error: any) => {
+                    console.log(error)
+                    setIsLoading(false)
+                }).catch((error: any) => {
+                    console.log(error)
+                    setIsLoading(false)
+                });
+            }
+        } catch (error) {
+            setIsLoading(false)
+            console.log(error)
         }
     }
 
@@ -46,10 +66,11 @@ export default function Home() {
             p: "dot-20",
             op: "deploy",
             tick,
-            amount
+            supply: +amount,
         }
         if(selectedAccount?.address) {
-            transfer(info)
+            setIsLoading(true)
+            transfer(info, 'deploy')
         } else {
             await connect()
         }
@@ -63,7 +84,8 @@ export default function Home() {
             tick
         }
         if(selectedAccount?.address) {
-            transfer(info)
+            setIsLoading(true)
+            transfer(info, 'mint')
         } else {
             await connect()
         }
@@ -71,7 +93,14 @@ export default function Home() {
 
     const handleConnet = async () => {
         if(isWeb3Injected) {
-            await connect()
+            try {
+                setIsLoading(true)
+                await connect()
+                setIsLoading(false)
+            } catch (error) {
+                setIsLoading(false)
+                console.log(error)
+            }
         } else {
             console.log('eee')
         }
@@ -115,6 +144,7 @@ export default function Home() {
                                 <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 block flex-1 color-white"
                                         size="lg"
                                         onClick={handleMint}
+                                        isLoading={isLoading}
                                 >
                                     MINT
                                 </Button>
@@ -122,6 +152,7 @@ export default function Home() {
                                 <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 block flex-1 color-white"
                                         size="lg"
                                         onClick={handleConnet}
+                                        isLoading={isLoading}
                                 >
                                     CONNECT WALLET
                                 </Button>
@@ -157,6 +188,7 @@ export default function Home() {
                             <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 block flex-1 color-white"
                                 size="lg"
                                 onClick={handleDeploy}
+                                isLoading={isLoading}
                             >
                                 DEPLOY
                             </Button>
@@ -164,6 +196,7 @@ export default function Home() {
                             <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 block flex-1 color-white"
                                 size="lg"
                                 onClick={handleConnet}
+                                isLoading={isLoading}
                             >
                                 CONNECT WALLET
                             </Button>
