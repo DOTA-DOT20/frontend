@@ -81,7 +81,7 @@ export default function Home() {
                     </thead>
                     <tbody>
                         {ticks.map((token, index) => {
-                            const progress = (token.supply / token.max * 100).toFixed(2);
+                            const progress = (token.market_supply / token.total_supply * 100).toFixed(2);
                             const progressDoneWidth = progress / 100 * 200;
                             return (
                                 <tr key={token.tick} className={`h-24 border-b ${styles.tableRow}`}>
@@ -92,7 +92,7 @@ export default function Home() {
                                             <div className={`h-4 rounded-xl ${styles.progressDone}`} style={{width: progressDoneWidth}}></div>
                                         </div>
                                     </td>
-                                    <td className="text-center">{token.max}</td>
+                                    <td className="text-center">{token.total_supply}</td>
                                     <td className="text-center">{progress}%</td>
                                     <td className="text-center">{token.holders}</td>
                                     <td className="text-center">{token.deploy_number}</td>
