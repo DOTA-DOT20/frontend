@@ -32,7 +32,7 @@ export default function Home() {
             if (type && type === 'deploy') {
                 const header = await api.rpc.chain.getHeader()
                 const blockNumber = header.number.toNumber()
-                info.start = blockNumber
+                info.start = blockNumber + 10
             }
             
             const injector = await getInjectedAccount()
@@ -66,7 +66,7 @@ export default function Home() {
             p: "dot-20",
             op: "deploy",
             tick,
-            supply: +amount,
+            amt: +amount,
         }
         if(selectedAccount?.address) {
             setIsLoading(true)
