@@ -38,7 +38,7 @@ export default function Home() {
             const injector = await getInjectedAccount()
             if (injector) {
                 api.tx.utility.batchAll([
-                    api.tx.balances.transferKeepAlive(selectedAccount.address, 1 * 1e12),
+                    api.tx.balances.transferKeepAlive(selectedAccount.address, 0.01 * 1e12),
                     api.tx.system.remark(JSON.stringify(info)),
                 ]).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: any) => {
                     if (result.status.isInBlock) {
