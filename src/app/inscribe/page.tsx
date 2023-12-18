@@ -25,15 +25,25 @@ export default function Home() {
 
 
     const handleMint = async () => {
+        let info = {
+            p: "dot-20",
+            op: "mint",
+            tick
+        }
         if(selectedAccount?.address) {
             const api = await getApi()
             const injector = await getInjectedAccount()
-            if(injector) {
-                api.tx.balances
-                    .transfer(selectedAccount.address, 123456)
-                    .signAndSend(selectedAccount.address, { signer: injector.signer }, (status) => {
-                        console.log(status);
-                    });
+            if (injector) {
+              api.tx.utility.batchAll([
+                api.tx.balances.transferKeepAlive(selectedAccount.address, 1 * 1e12),
+                api.tx.system.remark(JSON.stringify(info)),
+              ]).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: any) => {
+                if (result.status.isInBlock) {
+                } else if (result.status.isFinalized) {
+                  let blockNumber = result.blockNumber.toNumber()
+                  console.log('success! blockNumber:', blockNumber)
+                }
+              });
             }
 
         } else {
@@ -77,16 +87,6 @@ export default function Home() {
                           placeholder="4 characters like 'DOTA'..."
                           value={tick}
                           onValueChange={setTick}
-                        />
-                      </div>
-                      <div className={styles.formItem}>
-                        <label htmlFor="name">Amount</label>
-                        <Input
-                          type="number"
-                          min={1}
-                          placeholder="Amount"
-                          value={amount}
-                          onValueChange={setAmount}
                         />
                       </div>
                     </div>
