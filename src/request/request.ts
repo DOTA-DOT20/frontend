@@ -18,7 +18,7 @@ axios.interceptors.response.use(response => {
   return Promise.reject(err)
 })
 
-export const post = (url: any, data = {}) => {
+export const post = <T extends object>(url: string, data  = {} as T) => {
   url = `${baseURL}${url}`
   return new Promise((resolve, reject) => {
     axios.post(url, data).then(response => {
@@ -30,7 +30,7 @@ export const post = (url: any, data = {}) => {
 }
 
 
-export const get = (url: any, params = {}) => {
+export const get = (url: string, params = {}) => {
   url = `${baseURL}${url}`
   return new Promise((resolve, reject) => {
     axios.get(url, { params }).then(response => {

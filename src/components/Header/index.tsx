@@ -12,10 +12,6 @@ import starIcon from '@/icons/star.svg'
 import compassIcon from '@/icons/compass.svg'
 import walletIcon from '@/icons/wallet.svg'
 import {useConnectWallet} from "@/hooks/usePolkadot";
-import {useEffect, useState} from "react";
-import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
-import {useRecoilState} from "recoil";
-import {accountState} from "@/stores/account";
 
 const menus = [
     {

@@ -1,12 +1,18 @@
 "use client"
-import { getTokens } from "@/app/utils/get-tokens"
 import  styles from "./index.module.css";
 import { getTickList } from '@/request/index'
-import React, { useEffect, useState, useRef } from "react";
+import React, {useEffect, useState} from "react";
 import {Pagination} from "@nextui-org/react";
 
 let isRequesting = false
 
+type Token = {
+    market_supply: number,
+    total_supply: number,
+    tick: string
+    holders: number
+    deploy_number: number
+};
 export default function Home() {
     const [ticks, setTicks] = useState([])
     const [inputWord, setInputword] = useState('')
@@ -14,7 +20,7 @@ export default function Home() {
     const [total, setTotal] = useState(0)
     const pageSize = 10
     const [keyword, setKeyword] = useState('')
-  
+
     const getTicks = async () => {
       try {
         let data: any = {
@@ -56,7 +62,6 @@ export default function Home() {
             getTicks()
         }
     }, [page, keyword])
-  
     const keywordChange = (e: any) => {
         setInputword(e.target.value)
     }
@@ -80,9 +85,9 @@ export default function Home() {
                         </tr>
                     </thead>
                     <tbody>
-                        {ticks.map((token: any, index) => {
-                            const progress: any = (token.market_supply / token.total_supply * 100).toFixed(2);
-                            const progressDoneWidth = progress / 100 * 200;
+                        {ticks.map((token : Token, index: number ) => {
+                            const progress = (token.market_supply / token.total_supply * 100).toFixed(2);
+                            const progressDoneWidth = parseFloat(progress) / 100 * 200;
                             return (
                                 <tr key={token.tick} className={`h-24 border-b ${styles.tableRow}`}>
                                     <td className="text-center">{index + 10 * (page - 1) + 1}</td>
