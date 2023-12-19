@@ -7,6 +7,7 @@ import React, {ChangeEvent, useEffect, useMemo, useState} from "react";
 import {isWeb3Injected} from "@polkadot/extension-dapp";
 import {useConnectWallet} from "@/hooks/usePolkadot";
 import Loading from "@/components/Loading";
+import {ISubmittableResult} from "@polkadot/types/types";
 
 
 export default function Home() {
@@ -31,7 +32,7 @@ export default function Home() {
     }
 
     const transfer = async (info: any, type: any) => {
-        try {
+        return new Promise(async (resolve, reject) => {
             const api = await getApi()
             // get block number
             if (type && type === 'deploy') {
@@ -45,26 +46,21 @@ export default function Home() {
                 api.tx.utility.batchAll([
                     api.tx.balances.transferKeepAlive(selectedAccount.address, 0.01 * 1e12),
                     api.tx.system.remark(JSON.stringify(info)),
-                ]).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: any) => {
+                ]).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: ISubmittableResult) => {
+                    console.log(result);
                     if (result.status.isInBlock) {
                     } else if (result.status.isFinalized) {
                         let blockNumber = result.blockNumber.toNumber()
                         console.log('success! blockNumber:', blockNumber)
-                        setIsLoading(false)
+                        resolve(result)
                     }
-                }, (error: any) => {
-                    console.log(error)
-                    setIsLoading(false)
                 }).catch((error: any) => {
-                    console.log(error)
-                    setIsLoading(false)
+                    reject(error)
                 });
             }
-        } catch (error) {
+        }).finally(() => {
             setIsLoading(false)
-            console.log(error)
-            throw error
-        }
+        })
     }
 
     const handleDeploy = async () => {
