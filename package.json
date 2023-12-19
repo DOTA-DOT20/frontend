@@ -16,6 +16,7 @@
     "@polkadot/api": "^10.11.1",
     "@polkadot/extension-dapp": "^0.46.6",
     "@polkadot/react-identicon": "^3.6.4",
+    "@polkadot/types": "^10.11.2",
     "axios": "^1.6.2",
     "framer-motion": "^10.16.16",
     "next": "14.0.4",
