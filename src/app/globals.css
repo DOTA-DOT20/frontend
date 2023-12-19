@@ -9,9 +9,14 @@
   --nextui-foreground: #fff;
 }
 
+html {
+  background: var(--background);
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
+  min-height: 100vh;
 }
 
 .btn {
