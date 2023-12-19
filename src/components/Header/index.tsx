@@ -141,7 +141,7 @@ export default function Header() {
                         >
                             {allAccounts.map((account) => (
                                 <DropdownItem key={account.address} onClick={() => setSelectedAccount(account)}>
-                                    {account.meta.name} [ {shotAddress(selectedAccount.address)} ]
+                                    {account.meta.name} [ {shotAddress(account.address)} ]
                                 </DropdownItem>
                             ))}
                         </DropdownMenu>
