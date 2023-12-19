@@ -3,12 +3,10 @@
 import {RadioGroup, Radio, Input, Button} from "@nextui-org/react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 import  styles from "./index.module.css";
-import React, {ChangeEvent, useEffect, useMemo, useState} from "react";
-import {isWeb3Injected} from "@polkadot/extension-dapp";
-import {useConnectWallet} from "@/hooks/usePolkadot";
+import React, {ChangeEvent, useMemo, useState} from "react";
 import Loading from "@/components/Loading";
 import {ISubmittableResult} from "@polkadot/types/types";
-
+import {useConnectWallet} from "@/hooks/usePolkadot";
 
 export default function Home() {
     const [checkedType, setChecked] = useState('mint')
@@ -137,6 +135,11 @@ export default function Home() {
     }
 
     const handleConnect = async () => {
+
+        const { isWeb3Injected } = await import(
+            "@polkadot/extension-dapp"
+            );
+
         if(isWeb3Injected) {
             try {
                 setIsLoading(true)

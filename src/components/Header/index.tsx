@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import {Button, Tooltip} from '@nextui-org/react';
-import { web3Accounts, isWeb3Injected } from "@polkadot/extension-dapp";
 import NavLink from '../NavLink'
 import styles from './index.module.css'
 
@@ -52,6 +51,10 @@ export default function Header() {
     const { selectedAccount, connect } = useConnectWallet()
 
     const handleConnect = async () => {
+        const { isWeb3Injected } = await import(
+            "@polkadot/extension-dapp"
+            );
+
         if(isWeb3Injected) {
             await connect()
         } else {

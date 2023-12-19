@@ -1,7 +1,6 @@
 "use client"
 
-const { ApiPromise, WsProvider, Keyring } = require('@polkadot/api');
-import {web3Accounts, web3Enable, web3FromAddress} from "@polkadot/extension-dapp";
+const { ApiPromise, WsProvider } = require('@polkadot/api');
 import {useRecoilState} from "recoil";
 import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
 import {accountState} from "@/stores/account";
@@ -16,6 +15,11 @@ export const useConnectWallet = () => {
     const [allAccounts, setAllAccounts] = useState<InjectedAccountWithMeta[]>([]);
 
     const connect = async () => {
+        const { web3Accounts, web3Enable } = await import(
+            "@polkadot/extension-dapp"
+            );
+
+
         const extensions = await web3Enable("DOTA - DOT20");
         if (extensions.length === 0) {
             console.log("Please create cess-hacknet chain account.");
@@ -41,6 +45,12 @@ export const useConnectWallet = () => {
                 return ApiPromise.create({provider})
             },
             getInjectedAccount: async () => {
+
+                const { web3FromAddress } = await import(
+                    "@polkadot/extension-dapp"
+                    );
+
+
                 if(selectedAccount?.address) {
                     return web3FromAddress(selectedAccount.address)
                 }
