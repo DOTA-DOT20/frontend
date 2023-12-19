@@ -1,7 +1,8 @@
 'use client';
 
 import Image from "next/image";
-import {Button, Tooltip} from '@nextui-org/react';
+import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, Tooltip} from "@nextui-org/react";
+
 import NavLink from '../NavLink'
 import styles from './index.module.css'
 
@@ -11,6 +12,8 @@ import starIcon from '@/icons/star.svg'
 import compassIcon from '@/icons/compass.svg'
 import walletIcon from '@/icons/wallet.svg'
 import {useConnectWallet} from "@/hooks/usePolkadot";
+import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
+import arrowIcon from "@/icons/arrow-down.svg";
 
 const menus = [
     {
@@ -48,7 +51,19 @@ function shotAddress(address: string) {
 
 export default function Header() {
 
-    const { selectedAccount, connect } = useConnectWallet()
+    const {
+        allAccounts,
+        selectedAccount,
+        setSelectedAccount,
+        connect
+    } = useConnectWallet()
+
+
+    const handleSelectAccount = (keys: any) => {
+        const address = Array.from(keys)[0] as string
+        const current = allAccounts.find((item) => item.address === address);
+        setSelectedAccount(current as InjectedAccountWithMeta)
+    }
 
     const handleConnect = async () => {
         const { isWeb3Injected } = await import(
@@ -102,9 +117,36 @@ export default function Header() {
                 })}
             </div>
             {
-                selectedAccount ? <Button className="btn bg-pink-500 hover:bg-sky-700 color-white">
-                    <span>{selectedAccount.meta.name}</span>
-                </Button> : <Button className="btn bg-pink-500 hover:bg-sky-700 color-white" onClick={handleConnect}>
+                selectedAccount ?
+                    <Dropdown>
+                        <DropdownTrigger>
+                            <Button className="btn bg-pink-500 hover:bg-sky-700 color-white">
+                                <span>{selectedAccount.meta.name}  [ {shotAddress(selectedAccount.address)} ]</span>
+                                {
+                                    allAccounts.length > 1 && <Image
+                                    src={arrowIcon}
+                                    width={12}
+                                    height={12}
+                                    alt="arrow"
+                                  />
+                                }
+                            </Button>
+                        </DropdownTrigger>
+
+                        <DropdownMenu aria-label="Static Accounts"
+                              variant="flat"
+                              selectionMode="single"
+                              selectedKeys={selectedAccount.address}
+                              onSelectionChange={handleSelectAccount}
+                        >
+                            {allAccounts.map((account) => (
+                                <DropdownItem key={account.address} onClick={() => setSelectedAccount(account)}>
+                                    {account.meta.name} [ {shotAddress(selectedAccount.address)} ]
+                                </DropdownItem>
+                            ))}
+                        </DropdownMenu>
+                    </Dropdown>
+                : <Button className="btn bg-pink-500 hover:bg-sky-700 color-white" onClick={handleConnect}>
                     Connect Wallet
                 </Button>
             }

@@ -41,6 +41,7 @@ export const useConnectWallet = () => {
             connect,
             selectedAccount,
             allAccounts,
+            setSelectedAccount,
             getApi: () => {
                 return ApiPromise.create({provider})
             },
