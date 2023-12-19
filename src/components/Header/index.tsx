@@ -11,7 +11,7 @@ import currencyIcon from '@/icons/currency.svg'
 import starIcon from '@/icons/star.svg'
 import compassIcon from '@/icons/compass.svg'
 import walletIcon from '@/icons/wallet.svg'
-import {connectWallet, useConnectWallet} from "@/hooks/usePolkadot";
+import {useConnectWallet} from "@/hooks/usePolkadot";
 import {useEffect, useState} from "react";
 import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
 import {useRecoilState} from "recoil";

@@ -43,7 +43,7 @@ export default function Home() {
         setPage(1)
         setKeyword(inputWord)
     }
-    const inputKeydown = (e) => {
+    const inputKeydown = (e: any) => {
         if (e.keyCode == 13) {
             search()
         }
@@ -57,7 +57,7 @@ export default function Home() {
         }
     }, [page, keyword])
   
-    const keywordChange = (e) => {
+    const keywordChange = (e: any) => {
         setInputword(e.target.value)
     }
     return (
@@ -80,8 +80,8 @@ export default function Home() {
                         </tr>
                     </thead>
                     <tbody>
-                        {ticks.map((token, index) => {
-                            const progress = (token.market_supply / token.total_supply * 100).toFixed(2);
+                        {ticks.map((token: any, index) => {
+                            const progress: any = (token.market_supply / token.total_supply * 100).toFixed(2);
                             const progressDoneWidth = progress / 100 * 200;
                             return (
                                 <tr key={token.tick} className={`h-24 border-b ${styles.tableRow}`}>
