@@ -244,7 +244,7 @@ export default function Home() {
                   <div className={styles.contentFooter}>
                       {
                         selectedAccount?.address ?
-                            <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 block flex-1 color-white"
+                            <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white"
                                 size="lg"
                                 onClick={handleDeploy}
                                 isLoading={isLoading}
@@ -253,7 +253,7 @@ export default function Home() {
                                 DEPLOY
                             </Button>
                             :
-                            <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 block flex-1 color-white"
+                            <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white"
                                 size="lg"
                                 onClick={handleConnect}
                                 isLoading={isLoading}
