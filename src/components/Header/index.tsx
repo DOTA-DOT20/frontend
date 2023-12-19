@@ -31,18 +31,18 @@ const menus = [
         route: '/inscribe',
         icon: starIcon,
     },
-    {
-        name: 'EXPLORER',
-        route: '/explorer',
-        icon: compassIcon,
-        disabled: true
-    },
-    {
-        name: 'BALANCE',
-        route: '/own',
-        icon: walletIcon,
-        disabled: true
-    }
+    // {
+    //     name: 'EXPLORER',
+    //     route: '/explorer',
+    //     icon: compassIcon,
+    //     disabled: true
+    // },
+    // {
+    //     name: 'BALANCE',
+    //     route: '/own',
+    //     icon: walletIcon,
+    //     disabled: true
+    // }
 ]
 
 function shotAddress(address: string) {
