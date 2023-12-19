@@ -17,7 +17,11 @@ export default function Home() {
     const [amount, setAmount] = useState("500000");
     const [isLoading, setIsLoading] = useState(false);
 
-    const [modalInfo, setModalInfo] = useState({
+    const [modalInfo, setModalInfo] = useState<{
+        open: boolean,
+        title: string,
+        content: string | React.ReactNode
+    }>({
         open: false,
         title: '',
         content: ''
@@ -46,7 +50,7 @@ export default function Home() {
                 api.tx.utility.batchAll([
                     api.tx.balances.transferKeepAlive(selectedAccount.address, 0.01 * 1e12),
                     api.tx.system.remark(JSON.stringify(info)),
-                ]).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: ISubmittableResult) => {
+                ]).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: ISubmittableResult & {blockNumber: any}) => {
                     console.log(result);
                     if (result.status.isInBlock) {
                     } else if (result.status.isFinalized) {
@@ -72,18 +76,24 @@ export default function Home() {
         }
         if(selectedAccount?.address) {
             setIsLoading(true)
-            transfer(info, 'deploy').then(() => {
+            transfer(info, 'deploy').then((result:any) => {
+                const hash = result.txHash
+                const url = `https://polkadot.subscan.io/extrinsic/${hash}`
                 setModalInfo({
                     open: true,
                     title: 'Deploy Success',
-                    content: ''
+                    content:<>
+                        <p>Mint tx success, please check your balance later</p>
+                        {hash && <a href={url} target="_blank">{url}</a>}
+                    </>
                 })
             }, (error) => {
-                console.log(error);
                 setModalInfo({
                     open: true,
                     title: 'Deploy Fail',
-                    content: ''
+                    content: <>
+                        <p>{error.toString()}</p>
+                    </>
                 })
             })
         } else {
@@ -100,18 +110,25 @@ export default function Home() {
         }
         if(selectedAccount?.address) {
             setIsLoading(true)
-            transfer(info, 'mint').then(() => {
+            transfer(info, 'mint').then((result: any) => {
+                const hash = result.txHash
+                const url = `https://polkadot.subscan.io/extrinsic/${hash}`
                 setModalInfo({
                     open: true,
                     title: 'Mint Success',
-                    content: 'Mint success, please check your account'
+                    content: <>
+                        <p>Mint tx success, please check your balance later</p>
+                        {hash && <a href={url} target="_blank">{url}</a>}
+                    </>
                 })
             }, (error) => {
                 console.log(error);
                 setModalInfo({
                     open: true,
                     title: 'Mint Fail',
-                    content: ''
+                    content: <>
+                        <p>{error.toString()}</p>
+                    </>
                 })
             })
         } else {
