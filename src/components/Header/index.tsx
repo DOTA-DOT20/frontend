@@ -14,6 +14,7 @@ import walletIcon from '@/icons/wallet.svg'
 import {useConnectWallet} from "@/hooks/usePolkadot";
 import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
 import arrowIcon from "@/icons/arrow-down.svg";
+import {useEffect} from "react";
 
 const menus = [
     {
@@ -76,6 +77,11 @@ export default function Header() {
             console.log('eee')
         }
     }
+
+    useEffect(() => {
+        handleConnect()
+    }, []);
+
 
     return <div>
         <h1 className={styles.header}>
