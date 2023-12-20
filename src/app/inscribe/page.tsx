@@ -244,6 +244,7 @@ export default function Home() {
                         />
                       </div>
                     </div>
+                    <p className={styles.tip}>Tips: If there are no minting accounts in the current block, the production of that block is destroyed.</p>
                   </div>
                   <div className={styles.contentFooter}>
                       {
