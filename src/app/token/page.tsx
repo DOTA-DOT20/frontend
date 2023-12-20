@@ -22,7 +22,7 @@ export default function Home() {
     const [total, setTotal] = useState(0)
     const pageSize = 10
     const [keyword, setKeyword] = useState('')
-    const [balanceList, setBalanceList] = useState([])
+    const [balanceList, setBalanceList] = useState()
 
     const {
         connect,
@@ -132,7 +132,7 @@ export default function Home() {
                         </tr>
                     </thead>
                     <tbody>
-                        {ticks.map((token : Token, index: number ) => {
+                        {ticks.map((token: Token, index: number ) => {
                             const progress = (token.market_supply / token.total_supply * 100).toFixed(2);
                             const progressDoneWidth = parseFloat(progress) / 100 * 200;
                             return (
@@ -148,7 +148,7 @@ export default function Home() {
                                     <td className="text-center">{progress}%</td>
                                     <td className="text-center">{token.holders}</td>
                                     <td className="text-center">{token.deploy_number}</td>
-                                    <td className="text-center">{selectedAccount?.address ? (balanceList[token.tick] || 0) : (
+                                    <td className="text-center">{selectedAccount?.address ? (balanceList?.[token.tick] || '0') : (
                                         <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white" size="lg"
                                             onClick={handleConnect}>Connect Wallet</Button>
                                     )}</td>

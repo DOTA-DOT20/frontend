@@ -90,7 +90,7 @@ export default function Header() {
 
             </div>
             <div className={styles.menu}>
-                {menus.map((item) => {
+                {menus.map((item:any) => {
                     return (
                         item.disabled ? <Tooltip content="coming soon" key={item.route}>
                             <span className={styles.menuItem}>
