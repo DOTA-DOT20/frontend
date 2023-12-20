@@ -1,8 +1,10 @@
 "use client"
 import  styles from "./index.module.css";
-import { getTickList } from '@/request/index'
-import React, {useEffect, useState} from "react";
+import { getTickList, getBalanceList } from '@/request/index'
+import React, {use, useEffect, useState} from "react";
 import {Pagination} from "@nextui-org/react";
+import {useConnectWallet} from "@/hooks/usePolkadot";
+import {Button} from "@nextui-org/react";
 
 let isRequesting = false
 
@@ -20,6 +22,45 @@ export default function Home() {
     const [total, setTotal] = useState(0)
     const pageSize = 10
     const [keyword, setKeyword] = useState('')
+    const [balanceList, setBalanceList] = useState([])
+
+    const {
+        connect,
+        selectedAccount
+    } = useConnectWallet()
+
+    const getBalanceListFun = async () => {
+        let data: any = {
+            address: selectedAccount.address
+        }
+        try {
+            const res: any = await getBalanceList(data)
+            console.log(res)
+            if (res.code == 0) {
+                setBalanceList(res.balance_list)
+            }
+        } catch (error: any) {
+            console.log(error.message)
+        }
+    }
+
+    const handleConnect = async () => {
+
+        const { isWeb3Injected } = await import(
+            "@polkadot/extension-dapp"
+            );
+
+        if(isWeb3Injected) {
+            try {
+                await connect()
+            } catch (error) {
+                console.log(error)
+            }
+        } else {
+            console.log('eee')
+        }
+
+    }
 
     const getTicks = async () => {
       try {
@@ -62,6 +103,11 @@ export default function Home() {
             getTicks()
         }
     }, [page, keyword])
+    useEffect(() => {
+        if (selectedAccount?.address) {
+            getBalanceListFun()
+        }
+    } , [selectedAccount])
     const keywordChange = (e: any) => {
         setInputword(e.target.value)
     }
@@ -81,7 +127,8 @@ export default function Home() {
                             <th>Total Supply</th>
                             <th>Minted %</th>
                             <th>Holders</th>
-                            <th className="rounded-r-3xl">Deploy Block</th>
+                            <th >Deploy Block</th>
+                            <th className="rounded-r-3xl">Balance</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,6 +148,10 @@ export default function Home() {
                                     <td className="text-center">{progress}%</td>
                                     <td className="text-center">{token.holders}</td>
                                     <td className="text-center">{token.deploy_number}</td>
+                                    <td className="text-center">{selectedAccount?.address ? (balanceList[token.tick] || 0) : (
+                                        <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white" size="lg"
+                                            onClick={handleConnect}>Connect Wallet</Button>
+                                    )}</td>
                                 </tr>
                             );
                         })}
