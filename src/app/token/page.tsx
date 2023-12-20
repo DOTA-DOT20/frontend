@@ -14,6 +14,7 @@ type Token = {
     tick: string
     holders: number
     deploy_number: number
+    start_block: number
 };
 export default function Home() {
     const [ticks, setTicks] = useState([])
@@ -127,7 +128,8 @@ export default function Home() {
                             <th>Total Supply</th>
                             <th>Minted %</th>
                             <th>Holders</th>
-                            <th >Deploy Block</th>
+                            <th>Start Block</th>
+                            <th>End Block</th>
                             <th className="rounded-r-3xl">Balance</th>
                         </tr>
                     </thead>
@@ -147,7 +149,8 @@ export default function Home() {
                                     <td className="text-center">{token.total_supply}</td>
                                     <td className="text-center">{progress}%</td>
                                     <td className="text-center">{token.holders}</td>
-                                    <td className="text-center">{token.deploy_number}</td>
+                                    <td className="text-center">{token.start_block}</td>
+                                    <td className="text-center">{token.start_block + 43000}</td>
                                     <td className="text-center">{selectedAccount?.address ? (balanceList?.[token.tick] || '0') : (
                                         <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white" size="lg"
                                             onClick={handleConnect}>Connect Wallet</Button>
