@@ -6,7 +6,7 @@ import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
 import {accountState} from "@/stores/account";
 import {useMemo, useState} from "react";
 
-const provider = new WsProvider('wss://eosla.com');
+const provider = new WsProvider('wss://rpc.polkadot.io');
 
 const ss58Format = 0;
 
@@ -25,7 +25,7 @@ export const useConnectWallet = () => {
             console.log("Please create cess-hacknet chain account.");
             return;
         }
-        const accounts = await web3Accounts();
+        const accounts = await web3Accounts({ss58Format});
         console.log("accounts========", accounts);
         if (accounts.length == 0) {
             console.log("Please create account fisrt.");
