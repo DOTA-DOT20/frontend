@@ -3,7 +3,7 @@
 import {RadioGroup, Radio, Input, Button} from "@nextui-org/react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 import  styles from "./index.module.css";
-import React, {ChangeEvent, useMemo, useState} from "react";
+import React, {ChangeEvent, useEffect, useMemo, useState} from "react";
 import Loading from "@/components/Loading";
 import {ISubmittableResult} from "@polkadot/types/types";
 import {useConnectWallet} from "@/hooks/usePolkadot";
@@ -13,6 +13,7 @@ export default function Home() {
 
     const [tick, setTick] = useState("DOTA");
     const [amount, setAmount] = useState("500000");
+    const [blockNumber, setBlockNumber] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
     const [modalInfo, setModalInfo] = useState<{
@@ -27,6 +28,21 @@ export default function Home() {
 
     const { connect, getApi, getInjectedAccount, selectedAccount } = useConnectWallet()
 
+    async function loadBlockNumber() {
+        const api = await getApi()
+        const header = await api.rpc.chain.getHeader()
+        const blockNumber = header.number.toNumber()
+        console.log(blockNumber);
+        if(blockNumber) {
+            setBlockNumber(blockNumber+20)
+        }
+    }
+
+    useEffect(() => {
+        loadBlockNumber()
+    }, []);
+
+
     const handleChanged = (event: ChangeEvent<any>) => {
         setTick('')
         setAmount('')
@@ -36,13 +52,6 @@ export default function Home() {
     const transfer = async (info: any, type: any) => {
         return new Promise(async (resolve, reject) => {
             const api = await getApi()
-            // get block number
-            if (type && type === 'deploy') {
-                const header = await api.rpc.chain.getHeader()
-                const blockNumber = header.number.toNumber()
-                info.start = blockNumber
-            }
-
             const injector = await getInjectedAccount()
             if (injector) {
                 api.tx.utility.batchAll([
@@ -66,11 +75,24 @@ export default function Home() {
     }
 
     const handleDeploy = async () => {
+        if(!tick || !amount  || !blockNumber) {
+            setModalInfo({
+                open: true,
+                title: 'Tips',
+                content: <>
+                    <p>Before deploying, please check whether the fields `Amount Per Block`, `BlockNumber`, and `Ticket` are filled in correctly.</p>
+                </>
+            })
+            return false
+        }
+
+
         let info = {
             p: "dot-20",
             op: "deploy",
             tick,
             amt: +amount,
+            start: +blockNumber,
         }
         if(selectedAccount?.address) {
             setIsLoading(true)
@@ -81,8 +103,8 @@ export default function Home() {
                     open: true,
                     title: 'Deploy Success',
                     content:<>
-                        <p>Mint tx success, please check your balance later</p>
-                        {hash && <a href={url} target="_blank">{url}</a>}
+                        <p>Deploy transition success, please check token list later</p>
+                        {hash && <a href={url} target="_blank">subscan</a>}
                     </>
                 })
             }, (error) => {
@@ -99,8 +121,29 @@ export default function Home() {
         }
     }
 
+    const handleAmountChange = (value: string) => {
+        const number = value.replace(/[^\d]/g, '');
+        setAmount(number);
+    }
+
+    const handleBlockNumberChange = (value: string) => {
+        const number = value.replace(/[^\d]/g, '');
+        setBlockNumber(number);
+    }
+
 
     const handleMint = async () => {
+        if(!tick) {
+            setModalInfo({
+                open: true,
+                title: 'Tips',
+                content: <>
+                    <p>Before minting DOT-20 inscription, please check whether the Ticket field is filled in correctly.</p>
+                </>
+            })
+            return false
+        }
+
         let info = {
             p: "dot-20",
             op: "mint",
@@ -116,7 +159,7 @@ export default function Home() {
                     title: 'Mint Success',
                     content: <>
                         <p>Mint tx success, please check your balance later</p>
-                        {hash && <a href={url} target="_blank">{url}</a>}
+                        {hash && <a href={url} target="_blank">subscan</a>}
                     </>
                 })
             }, (error) => {
@@ -163,6 +206,13 @@ export default function Home() {
             }
         })
     }
+
+    const totalAmount = useMemo(() => {
+        if(amount) {
+            return parseInt(amount) * 43000
+        }
+        return ''
+    }, [amount]);
 
     return (
         <div className="p-12">
@@ -230,15 +280,29 @@ export default function Home() {
                         />
                       </div>
                       <div className={styles.formItem}>
-                        <label htmlFor="name">Amount</label>
+                        <label htmlFor="name">Amount Per Block</label>
                         <Input
                             type="number"
                             min={1}
-                            placeholder="Amount"
+                            placeholder="Amount Per Block"
                             value={amount}
-                            onValueChange={setAmount}
+                            onValueChange={handleAmountChange}
                         />
                         </div>
+                      <div className={styles.formItem}>
+                        <label htmlFor="name">Start BlockNumber</label>
+                        <Input
+                          type="number"
+                          min={1}
+                          placeholder="BlockNumber"
+                          value={blockNumber}
+                          onValueChange={handleBlockNumberChange}
+                        />
+                      </div>
+                      <div className={styles.formItem}>
+                        <label htmlFor="name">Total</label>
+                        <div className={styles.formContent}>{totalAmount} {tick}</div>
+                      </div>
                     </div>
                   </div>
                   <div className={styles.contentFooter}>
