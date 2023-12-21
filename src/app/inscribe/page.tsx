@@ -228,7 +228,7 @@ export default function Home() {
                         className={styles.group}
                     >
                         <Radio value="mint" classNames={{label: styles.option}}>Mint</Radio>
-                        <Radio value="deploy" classNames={{label: styles.option}}>Deploy</Radio>
+                        <Radio value="deploy" isDisabled={true} classNames={{label: styles.option}}>Deploy</Radio>
                         <Radio value="transfer" isDisabled={true} classNames={{label: styles.option}}>Transfer</Radio>
                     </RadioGroup>
                 </div>
