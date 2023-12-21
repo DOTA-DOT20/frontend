@@ -9,8 +9,6 @@ import styles from './index.module.css'
 import marketIcon from '@/icons/building.svg'
 import currencyIcon from '@/icons/currency.svg'
 import starIcon from '@/icons/star.svg'
-import compassIcon from '@/icons/compass.svg'
-import walletIcon from '@/icons/wallet.svg'
 import menuIcon from '@/icons/menu.svg'
 import {useConnectWallet} from "@/hooks/usePolkadot";
 import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
@@ -136,7 +134,7 @@ export default function Header() {
                     </DropdownTrigger>
 
                     <DropdownMenu aria-label="Static Accounts" variant="flat">
-                        {menus.filter(item => !item.disabled).map((item: any) => {
+                        {menus.map((item: any) => {
                             return <DropdownItem key={item.route}>
                                 <NavLink key={item.route} href={item.route} className={styles.menuItem}>
                                     {item.name}
