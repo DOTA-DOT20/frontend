@@ -221,15 +221,15 @@ export default function Home() {
             <div className={styles.content}>
                 <div className={styles.contentHead}>
                     <RadioGroup
-                        size="lg"
+                        // size="lg"
                         orientation="horizontal"
                         value={checkedType}
                         onChange={handleChanged}
                         className={styles.group}
                     >
-                        <Radio value="mint">Mint</Radio>
-                        <Radio value="deploy">Deploy</Radio>
-                        <Radio value="transfer" isDisabled={true}>Transfer</Radio>
+                        <Radio value="mint" classNames={{label: styles.option}}>Mint</Radio>
+                        <Radio value="deploy" classNames={{label: styles.option}}>Deploy</Radio>
+                        <Radio value="transfer" isDisabled={true} classNames={{label: styles.option}}>Transfer</Radio>
                     </RadioGroup>
                 </div>
                 {checkedType === 'mint' && <>

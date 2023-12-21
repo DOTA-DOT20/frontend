@@ -51,6 +51,7 @@
 .group [role="presentation"] {
     padding: 0 15px;
     justify-content: space-between;
+    flex-wrap: nowrap;
 }
 
 
@@ -91,3 +92,31 @@
 
 .formItem input::-webkit-outer-spin-button,
 .formItem input::-webkit-inner-spin-button{-webkit-appearance: none;}
+
+@media screen and (max-width: 768px) {
+    .content {
+        height: auto;
+        padding: 25px 0;
+    }
+
+    .contentFooter {
+        padding: 20px 0 0;
+    }
+
+    .formItem label {
+        width: 80px;
+    }
+
+    .formItem input[type="text"],
+    .formItem input[type="number"] {
+        height: 40px;
+    }
+
+    .option {
+        font-size: 0.9rem;
+    }
+
+    .tip {
+        padding: 0 10px;
+    }
+}
