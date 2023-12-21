@@ -12,6 +12,10 @@
 .logo {
 }
 
+.dropDownMenu {
+    display: none;
+}
+
 
 .menu {
     display: flex;
@@ -39,4 +43,18 @@ span.menuItem {
   display: inline-block;
   margin-right: 8px;
     margin-top: -2px;
+}
+
+@media (max-width: 900px) {
+    .header {
+        .logo {
+            display: none;
+        }
+        .menu {
+            display: none;
+        }
+        .dropDownMenu {
+            display: block;
+        }        
+    }
 }

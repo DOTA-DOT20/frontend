@@ -11,6 +11,7 @@ import currencyIcon from '@/icons/currency.svg'
 import starIcon from '@/icons/star.svg'
 import compassIcon from '@/icons/compass.svg'
 import walletIcon from '@/icons/wallet.svg'
+import menuIcon from '@/icons/menu.svg'
 import {useConnectWallet} from "@/hooks/usePolkadot";
 import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
 import arrowIcon from "@/icons/arrow-down.svg";
@@ -121,6 +122,32 @@ export default function Header() {
                         </NavLink>
                     )
                 })}
+            </div>
+            <div className={styles.dropDownMenu}>
+                <Dropdown>
+                    <DropdownTrigger>
+                        <Image
+                            src={menuIcon}
+                            width={24}
+                            height={24}
+                            alt="menu"
+                            className={styles.menuIcon}
+                        />
+                    </DropdownTrigger>
+
+                    <DropdownMenu aria-label="Static Accounts"
+                        variant="flat"
+                        selectionMode="single"
+                    >
+                        {menus.filter(item => !item.disabled).map((item: any) => {
+                            return <DropdownItem key={item.route}>
+                                <NavLink key={item.route} href={item.route} className={styles.menuItem}>
+                                    {item.name}
+                                </NavLink>
+                            </DropdownItem>
+                        })}
+                    </DropdownMenu>
+                </Dropdown>
             </div>
             {
                 selectedAccount ?

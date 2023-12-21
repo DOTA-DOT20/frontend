@@ -113,20 +113,20 @@ export default function Home() {
         setInputword(e.target.value)
     }
     return (
-        <main className="min-h-screen p-24">
+        <main className="h-screen md:px-24 px-8 py-24 w-full">
             <div className={`max-w-3xl mx-auto flex justify-between items-center border px-5 py-2 mb-16 ${styles.searchBox}`}>
-                <input type="text" className={`grow h-12 rounded-xl px-5 py-4 ${styles.searchInput}`} placeholder="Please input token name..." onChange={keywordChange} onKeyDown={inputKeydown} />
-                <button className={`w-40 h-10 rounded-3xl text-white ${styles.searchButton}`} onClick={search}>Search</button>
+                <input type="text" className={`grow h-12 rounded-xl md:px-5 py-4 ${styles.searchInput}`} placeholder="Please input token name..." onChange={keywordChange} onKeyDown={inputKeydown} />
+                <button className={`w-40 h-10 p-2 rounded-3xl text-white ${styles.searchButton}`} onClick={search}>Search</button>
             </div>
-            <div className={`w-full border px-5 py-4 ${styles.tableContainer}`}>
-                <table className="table-auto w-full">
+            <div className={`w-full border px-5 py-4 overflow-auto ${styles.tableContainer}`}>
+                <table className={`table-fixed w-full min-w-max ${styles.table}`}>
                     <thead className={`opacity-60 h-10 ${styles.tableHeader}`}>
                         <tr>
-                            <th className="rounded-l-3xl">#</th>
-                            <th>Name</th>
-                            <th>Progress</th>
-                            <th>Total Supply</th>
-                            <th>Minted %</th>
+                            <th className="rounded-l-3xl w-10">#</th>
+                            <th className="min-w-16">Name</th>
+                            <th className="min-w-44">Progress</th>
+                            <th className="min-w-32 w-44">Total Supply</th>
+                            <th className="min-w-32">Minted %</th>
                             <th>Holders</th>
                             <th>Start Block</th>
                             <th>End Block</th>

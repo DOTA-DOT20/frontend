@@ -3,6 +3,10 @@
   border-color: rgba(255 255 255 / 0.20);
 }
 
+.table {
+  min-width: 1200px;
+}
+
 .tableHeader {
   background-color: #252024;
 }
