@@ -209,7 +209,7 @@ export default function Home() {
 
     const totalAmount = useMemo(() => {
         if(amount) {
-            return parseInt(amount) * 43000
+            return parseInt(amount) * 42000
         }
         return ''
     }, [amount]);

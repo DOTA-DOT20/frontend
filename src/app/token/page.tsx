@@ -150,7 +150,7 @@ export default function Home() {
                                     <td className="text-center">{progress}%</td>
                                     <td className="text-center">{token.holders}</td>
                                     <td className="text-center">{token.start_block}</td>
-                                    <td className="text-center">{token.start_block + 43000}</td>
+                                    <td className="text-center">{token.start_block + 42000}</td>
                                     <td className="text-center">{selectedAccount?.address ? (balanceList?.[token.tick] || '0') : (
                                         <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white" size="lg"
                                             onClick={handleConnect}>Connect Wallet</Button>
