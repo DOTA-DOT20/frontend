@@ -135,10 +135,7 @@ export default function Header() {
                         />
                     </DropdownTrigger>
 
-                    <DropdownMenu aria-label="Static Accounts"
-                        variant="flat"
-                        selectionMode="single"
-                    >
+                    <DropdownMenu aria-label="Static Accounts" variant="flat">
                         {menus.filter(item => !item.disabled).map((item: any) => {
                             return <DropdownItem key={item.route}>
                                 <NavLink key={item.route} href={item.route} className={styles.menuItem}>
