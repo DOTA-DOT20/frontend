@@ -74,6 +74,7 @@ export default function Header() {
             await connect()
         } else {
             console.log('eee')
+            await connect()
         }
     }
 
