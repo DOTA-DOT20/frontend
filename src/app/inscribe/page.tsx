@@ -194,6 +194,7 @@ export default function Home() {
             }
         } else {
             console.log('eee')
+            await connect()
         }
 
     }
