@@ -1,10 +1,11 @@
 "use client"
 import  styles from "./index.module.css";
-import { getTickList, getBalanceList } from '@/request/index'
-import React, {use, useEffect, useState} from "react";
-import {Pagination} from "@nextui-org/react";
+import { getTickList, getBalanceList, getUsersIncData } from '@/request/index'
+import React, {useRef, useEffect, useState} from "react";
 import {useConnectWallet} from "@/hooks/usePolkadot";
-import {Button} from "@nextui-org/react";
+import {ScrollShadow, Button} from "@nextui-org/react";
+import ReactEcharts from 'echarts-for-react';
+import 'echarts/lib/chart/pie';
 
 let isRequesting = false
 
@@ -16,6 +17,92 @@ type Token = {
     deploy_number: number
     start_block: number
 };
+const lineOption = {
+    grid: {
+        top: '5%',
+        left: '10%',
+        right: '5%',
+        bottom: '30%'
+    },
+    xAxis: {
+        type: 'category',
+        data: [''],
+        axisLabel: {
+        color: '#FFF',
+        fontSize: '10px'
+        },
+        splitLine: {
+        show: true,
+        lineStyle: {
+            color: '#FFF',
+            opacity: 0.1
+        }
+        }
+    },
+    yAxis: {
+        type: 'value',
+        axisLabel: {
+        color: '#FFF',
+        fontSize: '10px'
+        },
+        splitLine: {
+        show: false
+        }
+    },
+    series: [
+        {
+        data: [],
+        type: 'line',
+        center: ['50%', '38%'],
+        smooth: true,
+        lineStyle: {
+            color: '#DE0376'
+        },
+        symbol: (value: any, params: any) => {
+            if (params.dataIndex === 6) {
+                return 'circle'
+            } else {
+                return 'none'
+            }
+        },
+        symbolSize: 8,
+        itemStyle: {
+            color: '#DE0376'
+        }
+        }
+    ]
+};
+const option = {
+    title: {
+        show: false,
+        text: '',
+        x: 'center'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: '{b} : {c} ({d}%)'
+    },
+    color: ['#DE0376', '#7B2150'],
+    series: [
+      {
+        name: '',
+        type: 'pie',
+        radius: '55%',
+        center: ['50%', '38%'],
+        data: [{value: 0, name: 'DOTA'}, {value: 0, name: 'Others'}],
+        itemStyle: {
+            normal: {
+                label: {
+                    show: false,
+                },
+                labelLine: {
+                    show: false
+                }
+            }
+        }
+      }
+    ]
+};
 export default function Home() {
     const [ticks, setTicks] = useState([])
     const [inputWord, setInputword] = useState('')
@@ -24,8 +111,13 @@ export default function Home() {
     const pageSize = 10
     const [keyword, setKeyword] = useState('')
     const [balanceList, setBalanceList] = useState()
+    const [liveData, setLiveData] = useState<any>([])
+
+    const lineRef = useRef<any>(null)
+    const pieRef = useRef<any>(null)
 
     const {
+        getApi,
         connect,
         selectedAccount
     } = useConnectWallet()
@@ -97,6 +189,55 @@ export default function Home() {
             search()
         }
     }
+    const subscribeNewHeads = async () => {
+        const api = await getApi()
+        await api.rpc.chain.subscribeNewHeads(async (header:any) => {
+            const hash = await api.rpc.chain.getBlockHash(header.number);
+            const block = await api.rpc.chain.getBlock(hash);
+            
+            let live:any = []
+            block.block.extrinsics.forEach((extrinsic: any) => {
+                if (extrinsic.method.section === 'utility' && extrinsic.method.method === 'batchAll' && extrinsic.method.args[0].length == 2) {
+                    live.unshift({
+                        hash: extrinsic.hash.toString(),
+                        block: header.number.toNumber()
+                    })
+                }
+            });
+            console.log(live.length)
+            setLiveData(live)
+            let echarts = pieRef.current.getEchartsInstance()
+            option.series[0].data[0].value = live.length
+            option.series[0].data[1].value = block.block.extrinsics.length - live.length
+            echarts.setOption(option);
+        });
+      }
+    const getUsersIncDataFun = async () => {
+        const api = await getApi()
+        const header = await api.rpc.chain.getHeader()
+        const blockNumber = header.number.toNumber()
+        const data = {
+            blockNumber: blockNumber,
+            tick: 'dota'
+        }
+        try {
+            const res: any = await getUsersIncData(data)
+            let now = new Date().getTime()
+            let times = []
+            for (let i = 0; i < 7; i++) {
+                let time = now - 3600000 * i
+                let hour = new Date(time).getHours()
+                let hourStr = hour < 10 ? '0' + hour : hour
+                times.push(`${hourStr}:00`)
+            }
+            lineOption.series[0].data = res.map((item: any) => item[0])
+            lineOption.xAxis.data = times.reverse()
+            let echarts = lineRef.current.getEchartsInstance()
+            echarts.setOption(lineOption);
+        } catch (error: any) {
+            console.log(error.message)
+        }
+    }
     useEffect(() => {
         if (isRequesting) {
             return
@@ -110,6 +251,10 @@ export default function Home() {
             getBalanceListFun()
         }
     } , [selectedAccount])
+    useEffect(() => {
+        getUsersIncDataFun()
+        subscribeNewHeads()
+    }, [])
     const keywordChange = (e: any) => {
         setInputword(e.target.value)
     }
@@ -138,38 +283,69 @@ export default function Home() {
                         {ticks.map((token: Token, index: number ) => {
                             const progress = (token.market_supply / token.total_supply * 100).toFixed(2);
                             return (
-                                <tr key={token.tick} className={`h-24 border-b ${styles.tableRow}`}>
-                                    <td className="text-center">{index + 10 * (page - 1) + 1}</td>
-                                    <td className="text-center">{token.tick}</td>
-                                    <td className="h-24 flex justify-center items-center">
-                                        <div className={`h-4 rounded-xl ${styles.progressAll}`} style={{width: 200}}>
-                                            <div className={`h-4 rounded-xl ${styles.progressDone}`} style={{width: progress + '%'}}></div>
-                                        </div>
-                                    </td>
-                                    <td className="text-center">{token.total_supply}</td>
-                                    <td className="text-center">{progress}%</td>
-                                    <td className="text-center">{token.holders}</td>
-                                    <td className="text-center">{token.start_block}</td>
-                                    <td className="text-center">{token.start_block + 42000}</td>
-                                    <td className="text-center">{selectedAccount?.address ? (balanceList?.[token.tick] || '0') : (
-                                        <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white" size="lg"
-                                            onClick={handleConnect}>Connect Wallet</Button>
-                                    )}</td>
-                                </tr>
+                                <>
+                                    <tr className={`h-24 border-b ${styles.tableRow}`}>
+                                        <td className="text-center">{index + 10 * (page - 1) + 1}</td>
+                                        <td className="text-center">{token.tick}</td>
+                                        <td className="h-24 flex justify-center items-center">
+                                            <div className={`h-4 rounded-xl ${styles.progressAll}`} style={{width: 200}}>
+                                                <div className={`h-4 rounded-xl ${styles.progressDone}`} style={{width: progress + '%'}}></div>
+                                            </div>
+                                        </td>
+                                        <td className="text-center">{token.total_supply}</td>
+                                        <td className="text-center">{progress}%</td>
+                                        <td className="text-center">{token.holders}</td>
+                                        <td className="text-center">{token.start_block}</td>
+                                        <td className="text-center">{token.start_block + 42000}</td>
+                                        <td className="text-center">{selectedAccount?.address ? (balanceList?.[token.tick] || '0') : (
+                                            <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white" size="lg"
+                                                onClick={handleConnect}>Connect Wallet</Button>
+                                        )}</td>
+                                    </tr>
+                                    <tr className={`h-24 border-b ${styles.tableRow}`}>
+                                        <td colSpan={9}>
+                                            <span className="flex justify-center items-center" style={{padding: '20px 0'}}>
+                                                <span className={`text-center ${styles.section}`} style={{overflow: 'hidden', display: 'block'}}>
+                                                    <p style={{textAlign: 'left', marginBottom: 10, fontSize: 16}}>Live ( {liveData.length} )</p>
+                                                    <p className="flex justify-center items-center" style={{width: '100%', backgroundColor: '#252024', borderRadius: 12, height: 24, marginBottom: 2}}>
+                                                        <span className="rounded-l-3xl" style={{fontSize:12, flex: 1}}>Block</span>
+                                                        <span style={{fontSize:12, flex: 1}}>Hash</span>
+                                                        <span className="rounded-r-3xl" style={{fontSize:12, flex: 1}}>Action</span>
+                                                    </p>
+                                                    <ScrollShadow className="h-[250px]" style={{width: '100%'}}>
+                                                        <table className={`table-fixed w-full min-w-max`} style={{minWidth: '100%'}}>
+                                                            <tbody>
+                                                            {
+                                                                liveData.map((item: any) => (
+                                                                    <tr style={{height: 40, borderBottom: '1px solid rgba(255, 255, 255, 0.10)'}}>
+                                                                        <th style={{fontSize:12}}>{item.block}</th>
+                                                                        <th style={{fontSize:12, textOverflow: 'ellipsis', overflow: 'hidden'}}>{item.hash}</th>
+                                                                        <th style={{fontSize:12}}>Mint</th>
+                                                                    </tr>
+                                                                ))
+                                                            }
+                                                            </tbody>
+                                                        </table>
+                                                    </ScrollShadow>
+                                                </span>
+                                                <span className={`text-center ${styles.section}`}>
+                                                    <p style={{textAlign: 'left', marginBottom: 10, fontSize: 16}}>DOTA Ratio</p>
+                                                    <p style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start', fontSize: 12}}>
+                                                        <p style={{display: 'flex', alignItems: 'center'}}>DOTA <span style={{marginLeft: 8, width: 12, height: 12, borderRadius: '50%', background: '#DE0376'}}></span></p>
+                                                        <p style={{display: 'flex', alignItems: 'center', marginLeft: 15}}>Others <span style={{marginLeft: 8, width: 12, height: 12, borderRadius: '50%', background: '#7B2150'}}></span></p>
+                                                    </p>
+                                                    <ReactEcharts ref={pieRef} option={option} style={{height: 360}} />
+                                                </span>
+                                               
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </>
                             );
                         })}
                     </tbody>
                 </table>
             </div>
-            <Pagination
-                total={total}
-                classNames={{
-                    wrapper: "gap-10 overflow-visible h-8 rounded border-divider mt-10 ml-auto mr-auto",
-                    item: "w-8 h-8 text-small rounded-none bg-transparent",
-                    cursor: "bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold",
-                }}
-                onChange={(page) => setPage(page)}
-            />
         </main>
     )
 }

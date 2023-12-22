@@ -38,3 +38,20 @@
 .searchBox {
   border-radius: 30px;
 }
+
+.section {
+  border-radius: 20px;
+  border: 1px solid rgba(255 255 255 / 0.10);
+  flex: 1;
+  height: 360px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.section::-webkit-scrollbar {
+  display: none;
+}
+
+.section ~ .section {
+  margin-left: 20px;
+}
