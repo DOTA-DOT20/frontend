@@ -194,7 +194,6 @@ export default function Home() {
         await api.rpc.chain.subscribeNewHeads(async (header:any) => {
             const hash = await api.rpc.chain.getBlockHash(header.number);
             const block = await api.rpc.chain.getBlock(hash);
-            
             let live:any = []
             block.block.extrinsics.forEach((extrinsic: any) => {
                 if (extrinsic.method.section === 'utility' && extrinsic.method.method === 'batchAll' && extrinsic.method.args[0].length == 2) {
@@ -204,7 +203,6 @@ export default function Home() {
                     })
                 }
             });
-            console.log(live.length)
             setLiveData(live)
             let echarts = pieRef.current.getEchartsInstance()
             option.series[0].data[0].value = live.length
