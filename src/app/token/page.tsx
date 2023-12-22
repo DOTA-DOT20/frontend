@@ -136,14 +136,13 @@ export default function Home() {
                     <tbody>
                         {ticks.map((token: Token, index: number ) => {
                             const progress = (token.market_supply / token.total_supply * 100).toFixed(2);
-                            const progressDoneWidth = parseFloat(progress) / 100 * 200;
                             return (
                                 <tr key={token.tick} className={`h-24 border-b ${styles.tableRow}`}>
                                     <td className="text-center">{index + 10 * (page - 1) + 1}</td>
                                     <td className="text-center">{token.tick}</td>
                                     <td className="h-24 flex justify-center items-center">
                                         <div className={`h-4 rounded-xl ${styles.progressAll}`} style={{width: 200}}>
-                                            <div className={`h-4 rounded-xl ${styles.progressDone}`} style={{width: progressDoneWidth}}></div>
+                                            <div className={`h-4 rounded-xl ${styles.progressDone}`} style={{width: progress + '%'}}></div>
                                         </div>
                                     </td>
                                     <td className="text-center">{token.total_supply}</td>
