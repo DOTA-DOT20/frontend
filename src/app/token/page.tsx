@@ -257,12 +257,12 @@ export default function Home() {
         setInputword(e.target.value)
     }
     return (
-        <main className="h-screen md:px-24 px-8 py-24 w-full">
+        <main className="min-h-full md:px-24 px-8 py-24 w-full">
             <div className={`max-w-3xl mx-auto flex justify-between items-center border px-5 py-2 mb-16 ${styles.searchBox}`}>
                 <input type="text" className={`grow h-12 rounded-xl md:px-5 py-4 ${styles.searchInput}`} placeholder="Please input token name..." onChange={keywordChange} onKeyDown={inputKeydown} />
                 <button className={`w-40 h-10 p-2 rounded-3xl text-white ${styles.searchButton}`} onClick={search}>Search</button>
             </div>
-            <div className={`w-full border px-5 py-4 overflow-auto ${styles.tableContainer}`}>
+            <div className={`w-full border px-5 py-4 overflow-x-auto overflow-y-hidden ${styles.tableContainer}`}>
                 <table className={`table-fixed w-full min-w-max ${styles.table}`}>
                     <thead className={`opacity-60 h-10 ${styles.tableHeader}`}>
                         <tr>
@@ -304,7 +304,10 @@ export default function Home() {
                                         <td colSpan={9}>
                                             <span className="flex justify-center items-center" style={{padding: '20px 0'}}>
                                                 <span className={`text-center ${styles.section}`} style={{overflow: 'hidden', display: 'block'}}>
-                                                    <p style={{textAlign: 'left', marginBottom: 10, fontSize: 16}}>Live ( {liveData.length} )</p>
+                                                    <div className="mb-2.5 flex justify-between align-middle">
+                                                        <div>Live ( {liveData.length} )</div>
+                                                        <div>Estimate Rewards: <span className="text-large text-primary">{Math.floor(5000000 / liveData.length)}</span> ${token.tick}</div>
+                                                    </div>
                                                     <p className="flex justify-center items-center" style={{width: '100%', backgroundColor: '#252024', borderRadius: 12, height: 24, marginBottom: 2}}>
                                                         <span className="rounded-l-3xl" style={{fontSize:12, flex: 1}}>Block</span>
                                                         <span style={{fontSize:12, flex: 1}}>Hash</span>
@@ -327,14 +330,14 @@ export default function Home() {
                                                     </ScrollShadow>
                                                 </span>
                                                 <span className={`text-center ${styles.section}`}>
-                                                    <p style={{textAlign: 'left', marginBottom: 10, fontSize: 16}}>DOTA Ratio</p>
+                                                    <p className="text-left mb-2.5">DOTA Ratio</p>
                                                     <p style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start', fontSize: 12}}>
                                                         <p style={{display: 'flex', alignItems: 'center'}}>DOTA <span style={{marginLeft: 8, width: 12, height: 12, borderRadius: '50%', background: '#DE0376'}}></span></p>
                                                         <p style={{display: 'flex', alignItems: 'center', marginLeft: 15}}>Others <span style={{marginLeft: 8, width: 12, height: 12, borderRadius: '50%', background: '#7B2150'}}></span></p>
                                                     </p>
                                                     <ReactEcharts ref={pieRef} option={option} style={{height: 360}} />
                                                 </span>
-                                               
+
                                             </span>
                                         </td>
                                     </tr>

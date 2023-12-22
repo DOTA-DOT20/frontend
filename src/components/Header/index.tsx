@@ -93,7 +93,6 @@ export default function Header() {
                     height={40}
                     priority
                 />
-
             </div>
             <div className={styles.menu}>
                 {menus.map((item:any) => {
@@ -122,29 +121,43 @@ export default function Header() {
                     )
                 })}
             </div>
-            <div className={styles.dropDownMenu}>
-                <Dropdown>
-                    <DropdownTrigger>
-                        <Image
-                            src={menuIcon}
-                            width={24}
-                            height={24}
-                            alt="menu"
-                            className={styles.menuIcon}
-                        />
-                    </DropdownTrigger>
 
-                    <DropdownMenu aria-label="Static Accounts" variant="flat">
-                        {menus.map((item: any) => {
-                            return <DropdownItem key={item.route}>
-                                <NavLink key={item.route} href={item.route} className={styles.menuItem}>
-                                    {item.name}
-                                </NavLink>
-                            </DropdownItem>
-                        })}
-                    </DropdownMenu>
-                </Dropdown>
+            <div className={styles.mobileGroup}>
+                <div className={styles.dropDownMenu}>
+                    <Dropdown>
+                        <DropdownTrigger>
+                            <Image
+                                src={menuIcon}
+                                width={24}
+                                height={24}
+                                alt="menu"
+                                className={styles.menuIcon}
+                            />
+                        </DropdownTrigger>
+
+                        <DropdownMenu aria-label="Static Accounts" variant="flat">
+                            {menus.map((item: any) => {
+                                return <DropdownItem key={item.route}>
+                                    <NavLink key={item.route} href={item.route} className={styles.menuItem}>
+                                        {item.name}
+                                    </NavLink>
+                                </DropdownItem>
+                            })}
+                        </DropdownMenu>
+                    </Dropdown>
+                </div>
+
+                <div className={styles.logoMobile}>
+                    <Image
+                        src="/favicon.svg"
+                        alt="DOTA"
+                        width={30}
+                        height={30}
+                        priority
+                    />
+                </div>
             </div>
+
             {
                 selectedAccount ?
                     <Dropdown>

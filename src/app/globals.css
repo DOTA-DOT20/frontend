@@ -19,6 +19,10 @@ body {
   min-height: 100vh;
 }
 
+.text-primary {
+  color: var(--color-primary);
+}
+
 .btn {
   min-width: 160px;
   padding: 0 10px;

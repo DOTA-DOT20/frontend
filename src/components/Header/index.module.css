@@ -12,10 +12,15 @@
 .logo {
 }
 
+.logoMobile,
 .dropDownMenu {
     display: none;
 }
 
+.mobileGroup {
+    display: flex;
+    gap: 10px;
+}
 
 .menu {
     display: flex;
@@ -47,14 +52,26 @@ span.menuItem {
 
 @media (max-width: 900px) {
     .header {
+        justify-content: space-between;
+        padding: 0 15px;
+
         .logo {
             display: none;
+        }
+        .logoMobile {
+            display: block;
         }
         .menu {
             display: none;
         }
+
         .dropDownMenu {
             display: block;
-        }        
+        }
+    }
+
+    .header :global(.btn) {
+        height: 30px;
+        border-radius: 15px;
     }
 }
