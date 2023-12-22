@@ -22,7 +22,8 @@ export const useConnectWallet = () => {
 
         const extensions = await web3Enable("DOTA - DOT20");
         if (extensions.length === 0) {
-            console.log("Please create cess-hacknet chain account.");
+            console.log("Please use SubWallet or Polkadot.js extension");
+            alert("Please use SubWallet or Polkadot.js extension");
             return;
         }
         const accounts = await web3Accounts({ss58Format});
