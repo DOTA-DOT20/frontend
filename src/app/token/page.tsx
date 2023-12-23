@@ -197,7 +197,7 @@ export default function Home() {
             let res:any = await getTransactionAmount()
             if (res.code == 0) {
                 let txList = res.tx_list
-                let tx = txList[txList.length - 1]
+                let tx = txList[0]
                 let blockHeight = tx.block_height
                 const hash = await api.rpc.chain.getBlockHash(blockHeight);
                 const block = await api.rpc.chain.getBlock(hash);
