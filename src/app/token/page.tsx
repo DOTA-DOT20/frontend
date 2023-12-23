@@ -316,7 +316,7 @@ export default function Home() {
                             if (blockNumber > 18723993) {
                                 progress = '100'
                             }
-                            
+
                             return (
                                 <>
                                     <tr className={`h-24 border-b ${styles.tableRow}`}>
@@ -343,9 +343,6 @@ export default function Home() {
                                                 <span className={`text-center ${styles.section}`} style={{overflow: 'hidden', display: 'block'}}>
                                                     <div className="mb-2.5 flex justify-between align-middle">
                                                         <div>Live ( {liveData.length} )</div>
-                                                        {
-                                                            liveData.length && <div>Estimate Rewards: <span className="text-large text-primary">{Math.floor(5000000 / liveData.length)}</span> ${token.tick}</div>
-                                                        }
                                                     </div>
                                                     <p className="flex justify-center items-center" style={{width: '100%', backgroundColor: '#252024', borderRadius: 12, height: 24, marginBottom: 2}}>
                                                         <span className="rounded-l-3xl" style={{fontSize:12, flex: 1}}>Block</span>
