@@ -1,6 +1,6 @@
 "use client"
 import  styles from "./index.module.css";
-import { getTickList, getBalanceList, getUsersIncData } from '@/request/index'
+import { getTickList, getBalanceList, getUsersIncData, getTransactionAmount } from '@/request/index'
 import React, {useRef, useEffect, useState} from "react";
 import {useConnectWallet} from "@/hooks/usePolkadot";
 import {ScrollShadow, Button} from "@nextui-org/react";
@@ -8,6 +8,8 @@ import ReactEcharts from 'echarts-for-react';
 import 'echarts/lib/chart/pie';
 
 let isRequesting = false
+
+let timeout: any = null
 
 type Token = {
     market_supply: number,
@@ -189,27 +191,40 @@ export default function Home() {
             search()
         }
     }
-    const subscribeNewHeads = async () => {
+    const getTransaction = async () => {
         const api = await getApi()
-        await api.rpc.chain.subscribeNewHeads(async (header:any) => {
-            const hash = await api.rpc.chain.getBlockHash(header.number);
-            const block = await api.rpc.chain.getBlock(hash);
-            let live:any = []
-            block.block.extrinsics.forEach((extrinsic: any) => {
-                if (extrinsic.method.section === 'utility' && extrinsic.method.method === 'batchAll' && extrinsic.method.args[0].length == 2) {
+        try {
+            let res:any = await getTransactionAmount()
+            if (res.code == 0) {
+                let txList = res.tx_list
+                let tx = txList[txList.length - 1]
+                let blockHeight = tx.block_height
+                const hash = await api.rpc.chain.getBlockHash(blockHeight);
+                const block = await api.rpc.chain.getBlock(hash);
+                let live:any = []
+                block.block.extrinsics.forEach((extrinsic: any) => {
                     live.unshift({
                         hash: extrinsic.hash.toString(),
-                        block: header.number.toNumber()
+                        block: blockHeight
                     })
-                }
-            });
-            setLiveData(live)
-            let echarts = pieRef.current.getEchartsInstance()
-            option.series[0].data[0].value = live.length
-            option.series[0].data[1].value = block.block.extrinsics.length - live.length
-            echarts.setOption(option);
-        });
-      }
+                });
+                setLiveData(live)
+                let echarts = pieRef.current.getEchartsInstance()
+                option.series[0].data[0].value = tx.dota_amount
+                option.series[0].data[1].value = tx.tx_amount - tx.dota_amount
+                echarts.setOption(option);
+            }
+            timeout = setTimeout(() => {
+                getTransaction()
+            }, 6000)
+        } catch (error) {
+            console.log(error)
+            timeout = setTimeout(() => {
+                getTransaction()
+            }, 6000)
+        }
+
+    }
     const getUsersIncDataFun = async () => {
         const api = await getApi()
         const header = await api.rpc.chain.getHeader()
@@ -250,8 +265,13 @@ export default function Home() {
         }
     } , [selectedAccount])
     useEffect(() => {
-        getUsersIncDataFun()
-        subscribeNewHeads()
+        getTransaction()
+        window.addEventListener('beforeunload', () => {
+            clearTimeout(timeout)
+        })
+        return () => {
+            clearTimeout(timeout)
+        }
     }, [])
     const keywordChange = (e: any) => {
         setInputword(e.target.value)
@@ -310,8 +330,7 @@ export default function Home() {
                                                     </div>
                                                     <p className="flex justify-center items-center" style={{width: '100%', backgroundColor: '#252024', borderRadius: 12, height: 24, marginBottom: 2}}>
                                                         <span className="rounded-l-3xl" style={{fontSize:12, flex: 1}}>Block</span>
-                                                        <span style={{fontSize:12, flex: 1}}>Hash</span>
-                                                        <span className="rounded-r-3xl" style={{fontSize:12, flex: 1}}>Action</span>
+                                                        <span className="rounded-r-3xl" style={{fontSize:12, flex: 2}}>Hash</span>
                                                     </p>
                                                     <ScrollShadow className="h-[250px]" style={{width: '100%'}}>
                                                         <table className={`table-fixed w-full min-w-max`} style={{minWidth: '100%'}}>
@@ -320,8 +339,7 @@ export default function Home() {
                                                                 liveData.map((item: any) => (
                                                                     <tr style={{height: 40, borderBottom: '1px solid rgba(255, 255, 255, 0.10)'}}>
                                                                         <th style={{fontSize:12}}>{item.block}</th>
-                                                                        <th style={{fontSize:12, textOverflow: 'ellipsis', overflow: 'hidden'}}>{item.hash}</th>
-                                                                        <th style={{fontSize:12}}>Mint</th>
+                                                                        <th colSpan={2} style={{fontSize:12, textOverflow: 'ellipsis', overflow: 'hidden'}}><a target="_blank" href={`https://polkadot.subscan.io/extrinsic/${item.hash}`} >{item.hash}</a></th>
                                                                     </tr>
                                                                 ))
                                                             }

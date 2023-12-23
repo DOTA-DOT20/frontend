@@ -9,6 +9,8 @@ import {ISubmittableResult} from "@polkadot/types/types";
 import {useConnectWallet} from "@/hooks/usePolkadot";
 
 export default function Home() {
+    const end = 18723993
+
     const [checkedType, setChecked] = useState('mint')
 
     const [tick, setTick] = useState("DOTA");
@@ -28,18 +30,18 @@ export default function Home() {
 
     const { connect, getApi, getInjectedAccount, selectedAccount } = useConnectWallet()
 
-    async function loadBlockNumber() {
+    async function subscribeNewHeads() {
         const api = await getApi()
-        const header = await api.rpc.chain.getHeader()
-        const blockNumber = header.number.toNumber()
-        console.log(blockNumber);
-        if(blockNumber) {
-            setBlockNumber(blockNumber+20)
-        }
+        await api.rpc.chain.subscribeNewHeads(async (header:any) => {
+            console.log(`Chain is at block: #${header.number}`);
+            const blockNumber = header.number
+            console.log(blockNumber.toString());
+            setBlockNumber(blockNumber.toString())
+        })
     }
 
     useEffect(() => {
-        loadBlockNumber()
+        subscribeNewHeads()
     }, []);
 
 
@@ -92,7 +94,7 @@ export default function Home() {
             op: "deploy",
             tick,
             amt: +amount,
-            start: +blockNumber,
+            start: +blockNumber + 20,
         }
         if(selectedAccount?.address) {
             setIsLoading(true)
@@ -133,6 +135,16 @@ export default function Home() {
 
 
     const handleMint = async () => {
+        if (+blockNumber > end) {
+            setModalInfo({
+                open: true,
+                title: 'Tips',
+                content: <>
+                    <p>Sorry, the minting function has been closed.</p>
+                </>
+            })
+            return false
+        }
         if(!tick) {
             setModalInfo({
                 open: true,
@@ -250,20 +262,20 @@ export default function Home() {
                   <div className={styles.contentFooter}>
                       {
                             selectedAccount?.address ?
-                                <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white"
-                                        size="lg"
-                                        onClick={handleMint}
-                                        isLoading={isLoading}
-                                        spinner={<Loading />}
+                                <Button className={`btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white ${+blockNumber > end ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    size="lg"
+                                    onClick={handleMint}
+                                    isLoading={isLoading}
+                                    spinner={<Loading />}
                                 >
                                     MINT
                                 </Button>
                                 :
                                 <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white"
-                                        size="lg"
-                                        onClick={handleConnect}
-                                        isLoading={isLoading}
-                                        spinner={<Loading />}
+                                    size="lg"
+                                    onClick={handleConnect}
+                                    isLoading={isLoading}
+                                    spinner={<Loading />}
                                 >
                                     CONNECT WALLET
                                 </Button>
