@@ -194,7 +194,7 @@ export default function Home() {
     const getTransaction = async () => {
         const api = await getApi()
         try {
-            let res:any = await getTransactionAmount()
+            let res:any = await getTransactionAmount({})
             if (res.code == 0) {
                 let txList = res.tx_list
                 let tx = txList[0]
