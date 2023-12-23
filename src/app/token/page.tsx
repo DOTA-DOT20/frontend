@@ -312,7 +312,10 @@ export default function Home() {
                     <tbody>
                         {ticks.map((token: Token, index: number ) => {
                             // const progress = (token.market_supply / token.total_supply * 100).toFixed(2);
-                            const progress = ((1 - ((18723993 - (+blockNumber)) / 42000)) * 100).toFixed(2);
+                            let progress = ((1 - ((18723993 - (+blockNumber)) / 42000)) * 100).toFixed(2);
+                            if (blockNumber > 18723993) {
+                                progress = '100'
+                            }
                             
                             return (
                                 <>
