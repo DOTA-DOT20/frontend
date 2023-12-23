@@ -114,6 +114,7 @@ export default function Home() {
     const [keyword, setKeyword] = useState('')
     const [balanceList, setBalanceList] = useState()
     const [liveData, setLiveData] = useState<any>([])
+    const [blockNumber, setBlockNumber] = useState(0)
 
     const lineRef = useRef<any>(null)
     const pieRef = useRef<any>(null)
@@ -251,11 +252,21 @@ export default function Home() {
             console.log(error.message)
         }
     }
+    async function loadBlockNumber() {
+        const api = await getApi()
+        const header = await api.rpc.chain.getHeader()
+        const blockNumber = header.number.toNumber()
+        console.log(blockNumber);
+        if(blockNumber) {
+            setBlockNumber(blockNumber)
+        }
+    }
     useEffect(() => {
         if (isRequesting) {
             return
         } else {
             isRequesting = true
+            loadBlockNumber()
             getTicks()
         }
     }, [page, keyword])
@@ -265,6 +276,7 @@ export default function Home() {
         }
     } , [selectedAccount])
     useEffect(() => {
+
         getTransaction()
         window.addEventListener('beforeunload', () => {
             clearTimeout(timeout)
@@ -299,7 +311,9 @@ export default function Home() {
                     </thead>
                     <tbody>
                         {ticks.map((token: Token, index: number ) => {
-                            const progress = (token.market_supply / token.total_supply * 100).toFixed(2);
+                            // const progress = (token.market_supply / token.total_supply * 100).toFixed(2);
+                            const progress = ((1 - ((18723993 - (+blockNumber)) / 42000)) * 100).toFixed(2);
+                            
                             return (
                                 <>
                                     <tr className={`h-24 border-b ${styles.tableRow}`}>
@@ -311,7 +325,7 @@ export default function Home() {
                                             </div>
                                         </td>
                                         <td className="text-center">{token.total_supply}</td>
-                                        <td className="text-center">{progress}%</td>
+                                        <td className="text-center">{blockNumber ? progress : '--'}%</td>
                                         <td className="text-center">{token.holders}</td>
                                         <td className="text-center">{token.start_block}</td>
                                         <td className="text-center">{token.start_block + 42000}</td>
