@@ -25,9 +25,11 @@ export default function TickSelector(props: Props) {
         label="Ticket"
         labelPlacement="outside-left"
         placeholder="Select a tick"
+        className="select"
         classNames={{
             base: 'flex',
-            mainWrapper: 'flex-1'
+            mainWrapper: 'flex-1 px-3',
+            trigger: 'border-1 border-slate-500'
         }}
         radius="full"
         size="md"

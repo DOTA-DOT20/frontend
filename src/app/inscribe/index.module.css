@@ -132,6 +132,10 @@
         height: 40px;
     }
 
+    .formItem :global(.select) [data-slot="trigger"] {
+        height: 40px;
+    }
+
     .option {
         font-size: 0.9rem;
     }

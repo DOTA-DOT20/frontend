@@ -20,6 +20,10 @@ body {
 }
 
 
+.select [data-slot="trigger"] {
+  height: 50px;
+}
+
 .text-primary {
   color: var(--color-primary);
 }
