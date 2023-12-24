@@ -35,6 +35,10 @@ export const Mint = (props: Props) => {
                             placeholder="4 characters like 'DOTA'..."
                             value={tick}
                             onValueChange={setTick}
+                            classNames={{
+                                base: 'flex',
+                                mainWrapper: 'flex-1'
+                            }}
                         />
                     </div>
                 </div>

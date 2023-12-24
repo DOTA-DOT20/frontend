@@ -25,7 +25,12 @@ export default function TickSelector(props: Props) {
         label="Ticket"
         labelPlacement="outside-left"
         placeholder="Select a tick"
-        className="max-w-xs"
+        classNames={{
+            base: 'flex',
+            mainWrapper: 'flex-1'
+        }}
+        radius="full"
+        size="md"
         selectedKeys={props.value ? [props.value] : []}
         onSelectionChange={handleChange}
     >

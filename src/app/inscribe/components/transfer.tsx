@@ -117,6 +117,10 @@ export const Transfer = (props: Props) => {
                             value={amount}
                             onValueChange={handleAmountChange}
                             onBlur={handleAmountBlur}
+                            classNames={{
+                                base: 'flex',
+                                mainWrapper: 'flex-1'
+                            }}
                         />
                         <a onClick={handleMaxBalance} className={styles.allBalance}>Max</a>
                         <p className={`text-right ${styles.balanceTip}`}>{
@@ -131,6 +135,10 @@ export const Transfer = (props: Props) => {
                             placeholder="Please inout your address"
                             value={receiver}
                             onValueChange={handleReceiver}
+                            classNames={{
+                                base: 'flex',
+                                mainWrapper: 'flex-1'
+                            }}
                         />
                     </div>
                 </div>
