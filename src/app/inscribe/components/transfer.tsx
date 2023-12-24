@@ -123,9 +123,11 @@ export const Transfer = (props: Props) => {
                             }}
                         />
                         <a onClick={handleMaxBalance} className={styles.allBalance}>Max</a>
-                        <p className={`text-right ${styles.balanceTip}`}>{
-                            totalBalance >= 0 && `Available: ${formatNumberWithCommas(totalBalance)} ${tick}`
-                        }</p>
+                        {
+                            <p className={`text-right ${styles.balanceTip}`}>{
+                                (totalBalance >= 0 && tick) && `Available: ${formatNumberWithCommas(totalBalance)} ${tick}`
+                            }</p>
+                        }
                     </div>
                     <div className={styles.formItem}>
                         <Input
