@@ -6,7 +6,7 @@
   --foreground: #fff;
   --background: #161313;
   --color-primary: #DE0376;
-  --nextui-foreground: #fff;
+  --nextui-foreground: --color-primary;
 }
 
 html {
@@ -40,4 +40,11 @@ body {
 .btn-large {
   height: 50px;
   border-radius: 25px;
+}
+
+
+[data-slot="listbox"] .data-\[hover\=true\]\:text-default-foreground[data-hover=true] ,
+[data-slot="listbox"] .data-\[selectable\=true\]\:focus\:text-default-foreground:focus[data-selectable=true] {
+  --tw-text-opacity: 1;
+  color: var(--color-primary);
 }
