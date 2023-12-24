@@ -29,7 +29,7 @@ export default function TickSelector(props: Props) {
         classNames={{
             base: 'flex',
             mainWrapper: 'flex-1 px-3',
-            trigger: 'border-1 border-slate-500'
+            trigger: 'border-1 border-slate-100'
         }}
         radius="full"
         size="md"

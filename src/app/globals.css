@@ -6,7 +6,7 @@
   --foreground: #fff;
   --background: #161313;
   --color-primary: #DE0376;
-  --nextui-foreground: #fff;
+  --nextui-foreground: --color-primary;
 }
 
 html {
@@ -41,3 +41,4 @@ body {
   height: 50px;
   border-radius: 25px;
 }
+
