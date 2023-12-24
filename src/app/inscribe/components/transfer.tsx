@@ -52,7 +52,7 @@ export const Transfer = (props: Props) => {
 
     const totalBalance = useMemo(() => {
         const balance = data?.balance_list
-        return balance?.[tick] || 100
+        return balance?.[tick] || 0
     }, [data, tick])
 
     useEffect(() => {
