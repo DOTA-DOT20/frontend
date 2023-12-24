@@ -43,8 +43,8 @@ body {
 }
 
 
-[data-slot="listbox"] .data-\[hover\=true\]\:text-default-foreground[data-hover=true] ,
+/* [data-slot="listbox"] .data-\[hover\=true\]\:text-default-foreground[data-hover=true] ,
 [data-slot="listbox"] .data-\[selectable\=true\]\:focus\:text-default-foreground:focus[data-selectable=true] {
   --tw-text-opacity: 1;
   color: var(--color-primary);
-}
+} */
