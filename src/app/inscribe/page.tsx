@@ -182,7 +182,7 @@ export default function Home() {
                 open: true,
                 title: 'Tips',
                 content: <>
-                <p>${result.error.message}</p>
+                <p>{result.error.message}</p>
             </>
             })
         } else {

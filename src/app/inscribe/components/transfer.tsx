@@ -26,11 +26,15 @@ const customMessages = {
 
 export const transferSchema = Joi.object({
     tick: Joi.string()
+        .label('Tick')
         .length(4)
         .required(),
     amount: Joi.number().min(1)
+        .label('Amount')
         .required(),
-    receiver: Joi.string().pattern(polkadotAddressRegex).required().messages(customMessages)
+    receiver: Joi.string()
+        .label('Receive Address')
+        .pattern(polkadotAddressRegex).required().messages(customMessages)
 })
 
 
