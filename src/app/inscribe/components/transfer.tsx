@@ -12,7 +12,7 @@ import styles from "@/app/inscribe/index.module.css";
 
 export interface TransferInfo {
     tick: string
-    amount: string,
+    amount: number,
     receiver: string
 }
 
@@ -92,7 +92,7 @@ export const Transfer = (props: Props) => {
     function handleDeploy() {
         props.onTransfer({
             tick,
-            amount,
+            amount: +amount,
             receiver
         })
     }
