@@ -31,7 +31,8 @@ export default function Home() {
 
     async function subscribeNewHeads() {
         const api = await getApi()
-        await api.rpc.chain.subscribeNewHeads(async (header:any) => {
+        console.log('subscribeNewHeads');
+        return await api.rpc.chain.subscribeNewHeads(async (header:any) => {
             console.log(`Chain is at block: #${header.number}`);
             const blockNumber = header.number
             console.log(blockNumber.toString());
@@ -40,7 +41,17 @@ export default function Home() {
     }
 
     useEffect(() => {
-        subscribeNewHeads()
+        let unsubscribe: any;
+        console.log('useEffect');
+        subscribeNewHeads().then((res) => {
+            unsubscribe = res
+        })
+        return () =>  {
+            if(unsubscribe) {
+                unsubscribe?.()
+                console.log('unsubscribe');
+            }
+        }
     }, []);
 
     const handleTransition = (result: any) => {

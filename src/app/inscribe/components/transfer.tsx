@@ -16,9 +16,7 @@ export interface TransferInfo {
     receiver: string
 }
 
-
 const polkadotAddressRegex = /^1[a-zA-Z0-9]{24,}$/;
-
 
 const customMessages = {
     'string.pattern.base': '{{#label}} must match the specified DOT address format'
@@ -36,8 +34,6 @@ export const transferSchema = Joi.object({
         .label('Receive Address')
         .pattern(polkadotAddressRegex).required().messages(customMessages)
 })
-
-
 
 interface Props {
     selectedAccount?: InjectedAccountWithMeta
@@ -68,7 +64,6 @@ export const Transfer = (props: Props) => {
             })
         }
     }, [selectedAccount]);
-
 
     const handleAmountChange = (value: string) => {
         const number = value.replace(/[^\d]/g, '');
@@ -107,32 +102,31 @@ export const Transfer = (props: Props) => {
             <div className={styles.contentBody}>
                 <div className={styles.form}>
                     <div className={styles.formItem}>
-                        <label htmlFor="name">Ticket</label>
                         <TickSelector
                             value={tick}
                             onValueChange={setTick}
                         />
                     </div>
                     <div className={styles.formItem}>
-                        <label htmlFor="name">Amount</label>
-                        <div className={styles.formItemContent}>
-                            <Input
-                                type="number"
-                                min={1}
-                                placeholder="Amount"
-                                value={amount}
-                                onValueChange={handleAmountChange}
-                                onBlur={handleAmountBlur}
-                            />
-                            <a onClick={handleMaxBalance} className={styles.allBalance}>Max</a>
-                            <p className={`text-right ${styles.balanceTip}`}>{
-                                totalBalance >= 0 && `Available: ${formatNumberWithCommas(totalBalance)} ${tick}`
-                            }</p>
-                        </div>
+                        <Input
+                            type="number"
+                            min={1}
+                            label="Amount"
+                            labelPlacement="outside-left"
+                            placeholder="Amount"
+                            value={amount}
+                            onValueChange={handleAmountChange}
+                            onBlur={handleAmountBlur}
+                        />
+                        <a onClick={handleMaxBalance} className={styles.allBalance}>Max</a>
+                        <p className={`text-right ${styles.balanceTip}`}>{
+                            totalBalance >= 0 && `Available: ${formatNumberWithCommas(totalBalance)} ${tick}`
+                        }</p>
                     </div>
                     <div className={styles.formItem}>
-                        <label htmlFor="name">Receive Address</label>
                         <Input
+                            label="Receive Address"
+                            labelPlacement="outside-left"
                             type="text"
                             placeholder="Please inout your address"
                             value={receiver}

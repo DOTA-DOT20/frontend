@@ -22,7 +22,8 @@ export default function TickSelector(props: Props) {
 
     return  <Select
         items={ticks}
-        label="Tick"
+        label="Ticket"
+        labelPlacement="outside-left"
         placeholder="Select a tick"
         className="max-w-xs"
         selectedKeys={props.value ? [props.value] : []}

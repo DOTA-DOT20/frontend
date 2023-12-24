@@ -60,10 +60,9 @@
 }
 
 .formItem {
-    display: flex;
-    align-items: flex-start;
     max-width: 420px;
     margin: 20px auto 0;
+    position: relative;
 }
 
 .formItem label {

@@ -29,8 +29,9 @@ export const Mint = (props: Props) => {
             <div className={styles.contentBody}>
                 <div className={styles.form}>
                     <div className={styles.formItem}>
-                        <label htmlFor="name">Ticket</label>
                         <Input
+                            label="Ticket"
+                            labelPlacement="outside-left"
                             placeholder="4 characters like 'DOTA'..."
                             value={tick}
                             onValueChange={setTick}
