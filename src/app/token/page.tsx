@@ -1,6 +1,6 @@
 "use client"
 import  styles from "./index.module.css";
-import { getTickList, getBalanceList, getUsersIncData, getTransactionAmount } from '@/request/index'
+import { getTickList, getBalanceList, getTransactionAmount } from '@/request/index'
 import React, {useRef, useEffect, useState} from "react";
 import {useConnectWallet} from "@/hooks/usePolkadot";
 import {ScrollShadow, Button} from "@nextui-org/react";
@@ -225,32 +225,6 @@ export default function Home() {
             }, 6000)
         }
 
-    }
-    const getUsersIncDataFun = async () => {
-        const api = await getApi()
-        const header = await api.rpc.chain.getHeader()
-        const blockNumber = header.number.toNumber()
-        const data = {
-            blockNumber: blockNumber,
-            tick: 'dota'
-        }
-        try {
-            const res: any = await getUsersIncData(data)
-            let now = new Date().getTime()
-            let times = []
-            for (let i = 0; i < 7; i++) {
-                let time = now - 3600000 * i
-                let hour = new Date(time).getHours()
-                let hourStr = hour < 10 ? '0' + hour : hour
-                times.push(`${hourStr}:00`)
-            }
-            lineOption.series[0].data = res.map((item: any) => item[0])
-            lineOption.xAxis.data = times.reverse()
-            let echarts = lineRef.current.getEchartsInstance()
-            echarts.setOption(lineOption);
-        } catch (error: any) {
-            console.log(error.message)
-        }
     }
     async function loadBlockNumber() {
         const api = await getApi()
