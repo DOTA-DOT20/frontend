@@ -4,17 +4,16 @@ import {RadioGroup, Radio, Input, Button} from "@nextui-org/react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 import  styles from "./index.module.css";
 import React, {ChangeEvent, useEffect, useMemo, useState} from "react";
-import Loading from "@/components/Loading";
-import {ISubmittableResult} from "@polkadot/types/types";
-import {useConnectWallet} from "@/hooks/usePolkadot";
+import { ISubmittableResult } from "@polkadot/types/types";
+import { useConnectWallet } from "@/hooks/usePolkadot";
+import { Mint, MintInfo } from "./components/mint";
+import {Deploy, DeployInfo} from "@/app/inscribe/components/deploy";
+import { Transfer } from "@/app/inscribe/components/transfer";
 
 export default function Home() {
     const end = 18723993
 
     const [checkedType, setChecked] = useState('mint')
-
-    const [tick, setTick] = useState("DOTA");
-    const [amount, setAmount] = useState("500000");
     const [blockNumber, setBlockNumber] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -46,8 +45,6 @@ export default function Home() {
 
 
     const handleChanged = (event: ChangeEvent<any>) => {
-        setTick('')
-        setAmount('')
         setChecked(event.target.value)
     }
 
@@ -76,8 +73,10 @@ export default function Home() {
         })
     }
 
-    const handleDeploy = async () => {
-        if(!tick || !amount  || !blockNumber) {
+    const handleDeploy = async (meta: DeployInfo) => {
+        const { tick, amount } = meta
+
+        if( !tick || !amount  || !meta.blockNumber ) {
             setModalInfo({
                 open: true,
                 title: 'Tips',
@@ -88,14 +87,25 @@ export default function Home() {
             return false
         }
 
+        if( +meta.blockNumber < +blockNumber ) {
+            setModalInfo({
+                open: true,
+                title: 'Tips',
+                content: <>
+                    <p>The `BlockNumber` field must be greater than the current block; otherwise, the deployment is invalid.</p>
+                </>
+            })
+            return false
+        }
 
-        let info = {
+        const info = {
             p: "dot-20",
             op: "deploy",
             tick,
             amt: +amount,
-            start: +blockNumber + 20,
+            start: +meta.blockNumber,
         }
+
         if(selectedAccount?.address) {
             setIsLoading(true)
             transfer(info, 'deploy').then((result:any) => {
@@ -123,18 +133,7 @@ export default function Home() {
         }
     }
 
-    const handleAmountChange = (value: string) => {
-        const number = value.replace(/[^\d]/g, '');
-        setAmount(number);
-    }
-
-    const handleBlockNumberChange = (value: string) => {
-        const number = value.replace(/[^\d]/g, '');
-        setBlockNumber(number);
-    }
-
-
-    const handleMint = async () => {
+    const handleMint = async ({ tick }: MintInfo) => {
         if (+blockNumber > end) {
             setModalInfo({
                 open: true,
@@ -155,8 +154,7 @@ export default function Home() {
             })
             return false
         }
-
-        let info = {
+        const info = {
             p: "dot-20",
             op: "mint",
             tick
@@ -220,13 +218,6 @@ export default function Home() {
         })
     }
 
-    const totalAmount = useMemo(() => {
-        if(amount) {
-            return parseInt(amount) * 42000
-        }
-        return ''
-    }, [amount]);
-
     return (
         <div className="p-12">
             <h2 className={styles.title}>Dota Inscribe</h2>
@@ -241,107 +232,31 @@ export default function Home() {
                         className={styles.group}
                     >
                         <Radio value="mint" classNames={{label: styles.option}}>Mint</Radio>
-                        <Radio value="deploy" isDisabled={true} classNames={{label: styles.option}}>Deploy</Radio>
-                        <Radio value="transfer" isDisabled={true} classNames={{label: styles.option}}>Transfer</Radio>
+                        <Radio value="deploy" isDisabled classNames={{label: styles.option}}>Deploy</Radio>
+                        <Radio value="transfer" classNames={{label: styles.option}}>Transfer</Radio>
                     </RadioGroup>
                 </div>
-                {checkedType === 'mint' && <>
-                  <div className={styles.contentBody}>
-                    <div className={styles.form}>
-                      <div className={styles.formItem}>
-                        <label htmlFor="name">Ticket</label>
-                        <Input
-                          placeholder="4 characters like 'DOTA'..."
-                          value={tick}
-                          onValueChange={setTick}
-                        />
-                      </div>
-                    </div>
-                    <p className={styles.tip}>Tips: If there are no minting accounts in the current block, the production of that block is destroyed.</p>
-                  </div>
-                  <div className={styles.contentFooter}>
-                      {
-                            selectedAccount?.address ?
-                                <Button className={`btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white ${+blockNumber > end ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                    size="lg"
-                                    onClick={handleMint}
-                                    isLoading={isLoading}
-                                    spinner={<Loading />}
-                                >
-                                    MINT
-                                </Button>
-                                :
-                                <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white"
-                                    size="lg"
-                                    onClick={handleConnect}
-                                    isLoading={isLoading}
-                                    spinner={<Loading />}
-                                >
-                                    CONNECT WALLET
-                                </Button>
-                        }
-                  </div>
-                </> }
-                {checkedType === 'deploy' && <>
-                  <div className={styles.contentBody}>
-                    <div className={styles.form}>
-                      <div className={styles.formItem}>
-                        <label htmlFor="name">Ticket</label>
-                        <Input
-                          placeholder="4 characters like 'DOTA'..."
-                          value={tick}
-                          onValueChange={setTick}
-                        />
-                      </div>
-                      <div className={styles.formItem}>
-                        <label htmlFor="name">Amount Per Block</label>
-                        <Input
-                            type="number"
-                            min={1}
-                            placeholder="Amount Per Block"
-                            value={amount}
-                            onValueChange={handleAmountChange}
-                        />
-                        </div>
-                      <div className={styles.formItem}>
-                        <label htmlFor="name">Start BlockNumber</label>
-                        <Input
-                          type="number"
-                          min={1}
-                          placeholder="BlockNumber"
-                          value={blockNumber}
-                          onValueChange={handleBlockNumberChange}
-                        />
-                      </div>
-                      <div className={styles.formItem}>
-                        <label htmlFor="name">Total</label>
-                        <div className={styles.formContent}>{totalAmount} {tick}</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.contentFooter}>
-                      {
-                        selectedAccount?.address ?
-                            <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white"
-                                size="lg"
-                                onClick={handleDeploy}
-                                isLoading={isLoading}
-                                spinner={<Loading />}
-                            >
-                                DEPLOY
-                            </Button>
-                            :
-                            <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white"
-                                size="lg"
-                                onClick={handleConnect}
-                                isLoading={isLoading}
-                                spinner={<Loading />}
-                            >
-                                CONNECT WALLET
-                            </Button>
-                        }
-                  </div>
-                </> }
+                {checkedType === 'mint' && <Mint
+                  selectedAccount={selectedAccount}
+                  isLoading={isLoading}
+                  onMint={handleMint}
+                  onConnect={handleConnect}
+                  isEnd
+                /> }
+                {checkedType === 'deploy' && <Deploy
+                  selectedAccount={selectedAccount}
+                  isLoading={isLoading}
+                  onDeploy={handleDeploy}
+                  onConnect={handleConnect}
+                  blockNumber={blockNumber}
+                /> }
+                {checkedType === 'transfer' && <Transfer
+                  selectedAccount={selectedAccount}
+                  isLoading={isLoading}
+                  onDeploy={handleDeploy}
+                  onConnect={handleConnect}
+                  blockNumber={blockNumber}
+                /> }
             </div>
 
             <Modal backdrop="blur" isOpen={modalInfo.open} onClose={handleModalClose}>

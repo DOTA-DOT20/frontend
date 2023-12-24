@@ -18,6 +18,7 @@
     "@polkadot/react-identicon": "^3.6.4",
     "@polkadot/types": "^10.11.2",
     "axios": "^1.6.2",
+    "axios-hooks": "^5.0.2",
     "echarts": "^5.4.3",
     "echarts-for-react": "^3.0.2",
     "framer-motion": "^10.16.16",

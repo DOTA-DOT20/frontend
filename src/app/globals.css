@@ -2,22 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground: #fff;
-  --background: #161313;
-  --color-primary: #DE0376;
-  --nextui-foreground: #fff;
-}
 
-html {
-  background: var(--background);
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  min-height: 100vh;
-}
 
 .text-primary {
   color: var(--color-primary);
