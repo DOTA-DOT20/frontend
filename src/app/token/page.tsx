@@ -126,7 +126,7 @@ export default function Home() {
     } = useConnectWallet()
 
     const getBalanceListFun = async () => {
-        let data: any = {
+        const data: any = {
             address: selectedAccount.address
         }
         try {

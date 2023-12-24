@@ -1,9 +1,13 @@
-import styles from "@/app/inscribe/index.module.css";
+import { isNumber, isNaN } from "lodash";
 import {Button, Input} from "@nextui-org/react";
 import Loading from "@/components/Loading";
 import React, {useEffect, useMemo, useState} from "react";
 import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
 import TickSelector from "@/components/TickSelector";
+import {requestBalance} from "@/request";
+import {useConnectWallet} from "@/hooks/usePolkadot";
+import {formatNumberWithCommas} from "@/utils/format";
+import styles from "@/app/inscribe/index.module.css";
 
 export interface TransferInfo {
     tick: string
@@ -20,8 +24,26 @@ interface Props {
 
 export const Transfer = (props: Props) => {
     const [tick, setTick] = useState("DOTA");
-    const [amount, setAmount] = useState("500000");
+    const [amount, setAmount] = useState("");
     const [receiver, setReceiver] = useState("");
+
+    const { selectedAccount } = useConnectWallet()
+    const [{ data }, getBalance]  = requestBalance()
+
+    const totalBalance = useMemo(() => {
+        const balance = data?.balance_list
+        return balance?.[tick] || 0
+    }, [data, tick])
+
+    useEffect(() => {
+        if(selectedAccount?.address) {
+            getBalance({
+                params: {
+                    address: selectedAccount.address
+                }
+            })
+        }
+    }, [selectedAccount]);
 
 
     const handleAmountChange = (value: string) => {
@@ -29,10 +51,24 @@ export const Transfer = (props: Props) => {
         setAmount(number);
     }
 
+    const handleAmountBlur = () => {
+        const number = parseInt(amount)
+        if(isNumber(number) && !isNaN(number)) {
+            if(number > totalBalance) {
+                setAmount(totalBalance)
+            }
+        } else {
+            setAmount('')
+        }
+    }
+
+    const handleMaxBalance = () => {
+        setAmount(totalBalance)
+    }
+
     const handleReceiver = (value: string) => {
         setReceiver(value);
     }
-
 
     function handleDeploy() {
         props.onTransfer({
@@ -55,13 +91,20 @@ export const Transfer = (props: Props) => {
                     </div>
                     <div className={styles.formItem}>
                         <label htmlFor="name">Amount</label>
-                        <Input
-                            type="number"
-                            min={1}
-                            placeholder="Amount"
-                            value={amount}
-                            onValueChange={handleAmountChange}
-                        />
+                        <div className={styles.formItemContent}>
+                            <Input
+                                type="number"
+                                min={1}
+                                placeholder="Amount"
+                                value={amount}
+                                onValueChange={handleAmountChange}
+                                onBlur={handleAmountBlur}
+                            />
+                            <a onClick={handleMaxBalance} className={styles.allBalance}>Max</a>
+                            <p className={`text-right ${styles.balanceTip}`}>{
+                                totalBalance >= 0 && `Available: ${formatNumberWithCommas(totalBalance)} ${tick}`
+                            }</p>
+                        </div>
                     </div>
                     <div className={styles.formItem}>
                         <label htmlFor="name">Receive Address</label>

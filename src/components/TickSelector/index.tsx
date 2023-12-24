@@ -16,7 +16,7 @@ export default function TickSelector(props: Props) {
         }]
     }, []);
 
-    const handleChange =(e: any) => {
+    const handleChange = (e: any) => {
         props.onValueChange(e.currentKey)
     }
 
@@ -25,7 +25,7 @@ export default function TickSelector(props: Props) {
         label="Tick"
         placeholder="Select a tick"
         className="max-w-xs"
-        selectedKeys={props.value ? [props.value]}
+        selectedKeys={props.value ? [props.value] : []}
         onSelectionChange={handleChange}
     >
         {(user) => (
