@@ -52,7 +52,7 @@ export const Transfer = (props: Props) => {
 
     const totalBalance = useMemo(() => {
         const balance = data?.balance_list
-        return balance?.[tick] || 0
+        return balance?.[tick] || 100
     }, [data, tick])
 
     useEffect(() => {
@@ -121,6 +121,7 @@ export const Transfer = (props: Props) => {
                                 base: 'flex',
                                 mainWrapper: 'flex-1'
                             }}
+                            style={{height: 50, width: 320}}
                         />
                         <a onClick={handleMaxBalance} className={styles.allBalance}>Max</a>
                         {
@@ -141,6 +142,7 @@ export const Transfer = (props: Props) => {
                                 base: 'flex',
                                 mainWrapper: 'flex-1'
                             }}
+                            style={{height: 50, width: 320}}
                         />
                     </div>
                 </div>

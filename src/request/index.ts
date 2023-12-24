@@ -13,5 +13,4 @@ export const requestBalance = () => {
     })
 }
 
-export const getUsersIncData = (data: any) => get(`/data/users_inc_data/${data.tick}/${data.blockNumber}/7/1`, data)
 export const getTransactionAmount = (data: any) => get(`/v1/get_transaction_amount`, data)

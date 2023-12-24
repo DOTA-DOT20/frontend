@@ -66,31 +66,41 @@ export const Deploy = (props: Props) => {
             <div className={styles.contentBody}>
                 <div className={styles.form}>
                     <div className={styles.formItem}>
-                        <label htmlFor="name">Ticket</label>
                         <Input
+                            label="Ticket"
+                            labelPlacement="outside-left"
                             placeholder="4 characters like 'DOTA'..."
                             value={tick}
                             onValueChange={setTick}
+                            classNames={{
+                                base: 'flex',
+                                mainWrapper: 'flex-1'
+                            }}
+                            style={{width: 320}}
                         />
                     </div>
                     <div className={styles.formItem}>
-                        <label htmlFor="name">Amount Per Block</label>
                         <Input
+                            label="Amount Per Block"
+                            labelPlacement="outside-left"
                             type="number"
                             min={1}
                             placeholder="Amount Per Block"
                             value={amount}
                             onValueChange={handleAmountChange}
+                            style={{width: 320}}
                         />
                     </div>
                     <div className={styles.formItem}>
-                        <label htmlFor="name">Start BlockNumber</label>
                         <Input
+                            label="Amount Per Block"
+                            labelPlacement="outside-left"
                             type="number"
                             min={1}
                             placeholder="BlockNumber"
                             value={blockNumber}
                             onValueChange={handleBlockNumberChange}
+                            style={{width: 320}}
                         />
                     </div>
                     <div className={styles.formItem}>

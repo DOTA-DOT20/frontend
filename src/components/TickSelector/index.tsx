@@ -33,6 +33,7 @@ export default function TickSelector(props: Props) {
         size="md"
         selectedKeys={props.value ? [props.value] : []}
         onSelectionChange={handleChange}
+        style={{height: 50, border: '1px solid rgba(255, 255, 255, 0.80)',marginLeft: 10, width: 320}}
     >
         {(user) => (
             <SelectItem key={user.name} textValue={user.name}>
