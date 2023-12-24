@@ -1,4 +1,5 @@
 import { isNumber, isNaN } from "lodash";
+import Joi from "joi";
 import {Button, Input} from "@nextui-org/react";
 import Loading from "@/components/Loading";
 import React, {useEffect, useMemo, useState} from "react";
@@ -14,6 +15,25 @@ export interface TransferInfo {
     amount: string,
     receiver: string
 }
+
+
+const polkadotAddressRegex = /^1[a-zA-Z0-9]{24,}$/;
+
+
+const customMessages = {
+    'string.pattern.base': '{{#label}} must match the specified DOT address format'
+};
+
+export const transferSchema = Joi.object({
+    tick: Joi.string()
+        .length(4)
+        .required(),
+    amount: Joi.number().min(1)
+        .required(),
+    receiver: Joi.string().pattern(polkadotAddressRegex).required().messages(customMessages)
+})
+
+
 
 interface Props {
     selectedAccount?: InjectedAccountWithMeta

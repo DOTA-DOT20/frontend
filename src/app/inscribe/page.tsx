@@ -8,7 +8,7 @@ import { ISubmittableResult } from "@polkadot/types/types";
 import { useConnectWallet } from "@/hooks/usePolkadot";
 import { Mint, MintInfo } from "./components/mint";
 import {Deploy, DeployInfo} from "@/app/inscribe/components/deploy";
-import { Transfer } from "@/app/inscribe/components/transfer";
+import {Transfer, TransferInfo, transferSchema} from "@/app/inscribe/components/transfer";
 
 export default function Home() {
     const end = 18723993
@@ -43,24 +43,47 @@ export default function Home() {
         subscribeNewHeads()
     }, []);
 
+    const handleTransition = (result: any) => {
+        const hash = result.txHash
+        const url = `https://polkadot.subscan.io/extrinsic/${hash}`
+        setModalInfo({
+            open: true,
+            title: 'Transition Success',
+            content: <>
+                <p>Transaction successful, please wait for the indexer to confirm.</p>
+                {hash && <a href={url} target="_blank">Subscan</a>}
+            </>
+        })
+    }
 
+    const handleTransitionFail = (error: Error) => {
+        console.log(error);
+        setModalInfo({
+            open: true,
+            title: 'Transition Fail',
+            content: <>
+                <p>{error.toString()}</p>
+            </>
+        })
+    }
     const handleChanged = (event: ChangeEvent<any>) => {
         setChecked(event.target.value)
     }
 
-    const transfer = async (info: any, type: any) => {
+    const transfer = async (info: any, type: string, receiver?: string) => {
         return new Promise(async (resolve, reject) => {
             const api = await getApi()
             const injector = await getInjectedAccount()
             if (injector) {
                 api.tx.utility.batchAll([
-                    api.tx.balances.transferKeepAlive(selectedAccount.address, 0),
+                    api.tx.balances.transferKeepAlive(
+                        receiver || selectedAccount.address,
+                        0
+                    ),
                     api.tx.system.remark(JSON.stringify(info)),
                 ]).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: ISubmittableResult & {blockNumber: any}) => {
-                    console.log(result);
-                    if (result.status.isInBlock) {
-                    } else if (result.status.isFinalized) {
-                        let blockNumber = result.blockNumber.toNumber()
+                    if (result.status.isFinalized) {
+                        const blockNumber = result.blockNumber.toNumber()
                         console.log('success! blockNumber:', blockNumber)
                         resolve(result)
                     }
@@ -108,26 +131,8 @@ export default function Home() {
 
         if(selectedAccount?.address) {
             setIsLoading(true)
-            transfer(info, 'deploy').then((result:any) => {
-                const hash = result.txHash
-                const url = `https://polkadot.subscan.io/extrinsic/${hash}`
-                setModalInfo({
-                    open: true,
-                    title: 'Deploy Success',
-                    content:<>
-                        <p>Deploy transition success, please check token list later</p>
-                        {hash && <a href={url} target="_blank">subscan</a>}
-                    </>
-                })
-            }, (error) => {
-                setModalInfo({
-                    open: true,
-                    title: 'Deploy Fail',
-                    content: <>
-                        <p>{error.toString()}</p>
-                    </>
-                })
-            })
+            transfer(info, 'deploy')
+                .then(handleTransition, handleTransitionFail)
         } else {
             await connect()
         }
@@ -161,38 +166,43 @@ export default function Home() {
         }
         if(selectedAccount?.address) {
             setIsLoading(true)
-            transfer(info, 'mint').then((result: any) => {
-                const hash = result.txHash
-                const url = `https://polkadot.subscan.io/extrinsic/${hash}`
-                setModalInfo({
-                    open: true,
-                    title: 'Mint Success',
-                    content: <>
-                        <p>Mint tx success, please check your balance later</p>
-                        {hash && <a href={url} target="_blank">subscan</a>}
-                    </>
-                })
-            }, (error) => {
-                console.log(error);
-                setModalInfo({
-                    open: true,
-                    title: 'Mint Fail',
-                    content: <>
-                        <p>{error.toString()}</p>
-                    </>
-                })
-            })
+            transfer(info, 'mint')
+                .then(handleTransition, handleTransitionFail)
         } else {
             await connect()
         }
     }
 
+    const handleTransfer = async (meta: TransferInfo) => {
+        const { tick, amount, receiver } = meta
+        const result = transferSchema.validate(meta);
+
+        if(result.error) {
+            setModalInfo({
+                open: true,
+                title: 'Tips',
+                content: <>
+                <p>${result.error.message}</p>
+            </>
+            })
+        } else {
+            const info = {
+                p: "dot-20",
+                op: "transfer",
+                tick,
+                amt: amount
+            }
+            setIsLoading(true)
+            transfer(info, 'transfer', meta.receiver)
+                .then(handleTransition, handleTransitionFail)
+        }
+
+    }
+
     const handleConnect = async () => {
-
         const { isWeb3Injected } = await import(
-            "@polkadot/extension-dapp"
-            );
-
+          "@polkadot/extension-dapp"
+        );
         if(isWeb3Injected) {
             try {
                 setIsLoading(true)
@@ -253,9 +263,8 @@ export default function Home() {
                 {checkedType === 'transfer' && <Transfer
                   selectedAccount={selectedAccount}
                   isLoading={isLoading}
-                  onDeploy={handleDeploy}
+                  onTransfer={handleTransfer}
                   onConnect={handleConnect}
-                  blockNumber={blockNumber}
                 /> }
             </div>
 
