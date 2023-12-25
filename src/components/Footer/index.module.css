@@ -1,7 +1,16 @@
 .footer {
     padding: 36px 0;
+}
+
+.footerNav {
     display: flex;
     justify-content: center;
     gap: 24px;
     align-items: center;
+}
+
+.copyRight {
+    padding-top: 10px;
+    display: flex;
+    justify-content: center;
 }
