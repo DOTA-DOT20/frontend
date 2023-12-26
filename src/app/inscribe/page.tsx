@@ -9,13 +9,14 @@ import { useConnectWallet } from "@/hooks/usePolkadot";
 import { Mint, MintInfo } from "./components/mint";
 import {Deploy, DeployInfo} from "@/app/inscribe/components/deploy";
 import {Transfer, TransferInfo, transferSchema} from "@/app/inscribe/components/transfer";
-
+import { Bills } from "./components/bills";
 export default function Home() {
     const end = 18723993
 
     const [checkedType, setChecked] = useState('mint')
     const [blockNumber, setBlockNumber] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [page, setPage] = React.useState(1);
 
     const [modalInfo, setModalInfo] = useState<{
         open: boolean,
@@ -86,13 +87,14 @@ export default function Home() {
             const api = await getApi()
             const injector = await getInjectedAccount()
             if (injector) {
-                api.tx.utility.batchAll([
-                    api.tx.balances.transferKeepAlive(
-                        receiver || selectedAccount.address,
-                        0
-                    ),
-                    api.tx.system.remark(JSON.stringify(info)),
-                ]).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: ISubmittableResult & {blockNumber: any}) => {
+                let batchAll = [api.tx.balances.transferKeepAlive(receiver || selectedAccount.address, 0)]
+                if (type == 'transfer') {
+                    console.log('transfer');
+                    batchAll.push(api.tx.system.remarkWithEvent(JSON.stringify(info)))
+                } else {
+                    batchAll.push(api.tx.system.remark(JSON.stringify(info)))
+                }
+                api.tx.utility.batchAll(batchAll).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: ISubmittableResult & {blockNumber: any}) => {
                     if (result.status.isFinalized) {
                         const blockNumber = result.blockNumber.toNumber()
                         console.log('success! blockNumber:', blockNumber)
@@ -201,7 +203,7 @@ export default function Home() {
                 p: "dot-20",
                 op: "transfer",
                 tick,
-                amt: amount
+                amt: +amount
             }
             setIsLoading(true)
             transfer(info, 'transfer', meta.receiver)
@@ -278,7 +280,9 @@ export default function Home() {
                   onConnect={handleConnect}
                 /> }
             </div>
-
+            {
+                checkedType === 'transfer' && <Bills />
+            }
             <Modal backdrop="blur" isOpen={modalInfo.open} onClose={handleModalClose}>
                 <ModalContent>
                     {(onClose) => (

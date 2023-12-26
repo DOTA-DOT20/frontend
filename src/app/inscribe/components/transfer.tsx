@@ -16,7 +16,8 @@ export interface TransferInfo {
     receiver: string
 }
 
-const polkadotAddressRegex = /^1[a-zA-Z0-9]{24,}$/;
+// const polkadotAddressRegex = /^1[a-zA-Z0-9]{24,}$/;
+const polkadotAddressRegex = /^5[a-zA-Z0-9]{24,}$/;
 
 const customMessages = {
     'string.pattern.base': '{{#label}} must match the specified DOT address format'
@@ -51,15 +52,17 @@ export const Transfer = (props: Props) => {
     const [{ data }, getBalance]  = requestBalance()
 
     const totalBalance = useMemo(() => {
-        const balance = data?.balance_list
-        return balance?.[tick] || 0
+        const balance = data?.balance
+        return balance || 0
     }, [data, tick])
 
     useEffect(() => {
         if(selectedAccount?.address) {
             getBalance({
                 params: {
-                    address: selectedAccount.address
+                    address: selectedAccount.address,
+                    // address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+                    tick
                 }
             })
         }

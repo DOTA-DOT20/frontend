@@ -8,7 +8,7 @@ import {useMemo, useState} from "react";
 
 const provider = new WsProvider('wss://eosla.com');
 
-const ss58Format = 0;
+const ss58Format = 42;
 
 export const useConnectWallet = () => {
     const [selectedAccount, setSelectedAccount] = useRecoilState<InjectedAccountWithMeta>(accountState);

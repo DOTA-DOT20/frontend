@@ -5,7 +5,17 @@ export const getBalanceList = (data = {}) => get('/v1/get_balance_list', data)
 
 export const requestBalance = () => {
     return useAxios({
-        url: '/v1/get_balance_list',
+        url: '/v1/get_balance',
+        method: "GET"
+    }, {
+        manual: true,
+        autoCancel: false
+    })
+}
+
+export const requestBills = () => {
+    return useAxios({
+        url: '/v1/user_trading',
         method: "GET"
     }, {
         manual: true,
