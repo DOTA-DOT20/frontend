@@ -189,7 +189,6 @@ export default function Home() {
     const handleTransfer = async (meta: TransferInfo) => {
         const { tick, amount, receiver } = meta
         const result = transferSchema.validate(meta);
-
         if(result.error) {
             setModalInfo({
                 open: true,
@@ -205,8 +204,10 @@ export default function Home() {
                 tick,
                 amt: +amount
             }
+
+            console.log(info);
             setIsLoading(true)
-            transfer(info, 'transfer', meta.receiver)
+            transfer(info, 'transfer', receiver)
                 .then(handleTransition, handleTransitionFail)
         }
 
