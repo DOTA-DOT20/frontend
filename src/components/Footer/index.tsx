@@ -18,7 +18,7 @@ export default function Footer() {
                     alt="twitter"
                 />
             </a>
-            <a href="https://github.com/DOTA-RC20" target="_blank">
+            <a href="https://github.com/DOTA-DOT20" target="_blank">
                 <Image
                     src={githubIcon}
                     width={32}
@@ -26,7 +26,7 @@ export default function Footer() {
                     alt="twitter"
                 />
             </a>
-            <a>
+            <a href="https://docs.dota.fyi" target="_blank">
                 <Image
                     src={docIcon}
                     width={32}
