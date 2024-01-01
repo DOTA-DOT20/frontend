@@ -1,11 +1,11 @@
 import { get, useAxios} from './request'
 
 export const getTickList = (data = {}) => get('/v1/get_tick_list', data)
-export const getBalanceList = (data = {}) => get('/v1/get_balance_list', data)
+export const getBalanceList = (data = {}) => get('/v1/get_account_balance', data)
 
 export const requestBalance = () => {
     return useAxios({
-        url: '/v1/get_balance',
+        url: '/v1/get_account_balance',
         method: "GET"
     }, {
         manual: true,
@@ -13,9 +13,9 @@ export const requestBalance = () => {
     })
 }
 
-export const requestBills = () => {
+export const requestTransactionStatus = () => {
     return useAxios({
-        url: '/v1/user_trading',
+        url: '/v1/get_transaction_status',
         method: "GET"
     }, {
         manual: true,

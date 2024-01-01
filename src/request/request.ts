@@ -1,10 +1,9 @@
 import axios, {AxiosRequestConfig, Method} from 'axios';
 import { makeUseAxios, Options } from 'axios-hooks'
 
-
 export const axiosInstance = axios.create({
   timeout: 100000,
-  baseURL: 'https://api_test.dota.fyi',
+  baseURL: 'https://test.dota.fyi',
 })
 
 

@@ -4,3 +4,7 @@ export  function formatNumberWithCommas(number: number) {
 }
 
 
+
+export function shotAddress(address: string) {
+    return address.slice(0, 6) + '...' + address.slice(-6)
+}

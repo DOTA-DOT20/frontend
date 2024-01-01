@@ -52,16 +52,17 @@ export const Transfer = (props: Props) => {
     const [{ data }, getBalance]  = requestBalance()
 
     const totalBalance = useMemo(() => {
-        const balance = data?.balance
-        return balance || 0
+        const balance = data?.balance || []
+        return (
+            (balance.find(item => item.tick === tick)?.available || 0) * 1
+        ).toFixed(0)
     }, [data, tick])
 
     useEffect(() => {
         if(selectedAccount?.address) {
             getBalance({
                 params: {
-                    address: selectedAccount.address,
-                    // address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+                    account: selectedAccount.address,
                     tick
                 }
             })
@@ -148,7 +149,6 @@ export const Transfer = (props: Props) => {
                             style={{height: 50, width: 320}}
                         />
                     </div>
-
                     <p className={styles.tip}>Tips: DOTA's transfer function is currently being tested. Please refrain from using the transfer function until it is officially announced and enabled on  <a className="text-primary decoration-solid" href="https://twitter.com/dot20_dota" target="_blank">Twitter</a>.</p>
                 </div>
             </div>

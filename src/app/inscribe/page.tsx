@@ -1,6 +1,6 @@
 "use client"
 
-import {RadioGroup, Radio, Input, Button} from "@nextui-org/react";
+import {RadioGroup, Radio, Button} from "@nextui-org/react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 import  styles from "./index.module.css";
 import React, {ChangeEvent, useEffect, useMemo, useState} from "react";
@@ -10,6 +10,8 @@ import { Mint, MintInfo } from "./components/mint";
 import {Deploy, DeployInfo} from "@/app/inscribe/components/deploy";
 import {Transfer, TransferInfo, transferSchema} from "@/app/inscribe/components/transfer";
 import { Bills } from "./components/bills";
+import {useRecords} from "@/app/inscribe/hooks/useRecords";
+
 export default function Home() {
     const end = 18723993
 
@@ -17,6 +19,8 @@ export default function Home() {
     const [blockNumber, setBlockNumber] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [page, setPage] = React.useState(1);
+
+    const { records, addRecord } = useRecords()
 
     const [modalInfo, setModalInfo] = useState<{
         open: boolean,
@@ -204,11 +208,19 @@ export default function Home() {
                 tick,
                 amt: +amount
             }
-
             console.log(info);
             setIsLoading(true)
             transfer(info, 'transfer', receiver)
-                .then(handleTransition, handleTransitionFail)
+                .then((result) => {
+                    addRecord({
+                        tick,
+                        from: selectedAccount.address,
+                        to: receiver,
+                        amt: +amount,
+                        hash: result.txHash
+                    })
+                    return handleTransition(result)
+                }, handleTransitionFail)
         }
 
     }
@@ -282,7 +294,7 @@ export default function Home() {
                 /> }
             </div>
             {
-                checkedType === 'transfer' && <Bills />
+                checkedType === 'transfer' && <Bills records={records}  blockNumber={blockNumber} />
             }
             <Modal backdrop="blur" isOpen={modalInfo.open} onClose={handleModalClose}>
                 <ModalContent>
