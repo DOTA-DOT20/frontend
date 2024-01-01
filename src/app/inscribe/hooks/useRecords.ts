@@ -7,7 +7,7 @@ export const useRecords = () => {
     const [records, setRecords] = useRecoilState<TransferRecord[]>(transferRecordState);
 
     const addRecord = (record: TransferRecord) => {
-        setRecords([...records, record]);
+        setRecords([record, ...records]);
     }
 
     return useMemo(() => {

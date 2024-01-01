@@ -17,7 +17,7 @@ const TransferStatus = (props:Props) => {
         const status = data?.status
         return {
             isSuccess: status === 1,
-            isPending: status === 0,
+            isPending: status === 0 || status === 10000,
             isFail: status === 9,
         }
     }, [data]);
