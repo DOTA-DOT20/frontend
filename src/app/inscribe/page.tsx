@@ -91,11 +91,12 @@ export default function Home() {
             const api = await getApi()
             const injector = await getInjectedAccount()
             if (injector) {
+                const target = receiver || selectedAccount.address;
                 const batchAll = [
-                    api.tx.balances.transferKeepAlive(receiver || selectedAccount.address, 0),
+                    api.tx.balances.transferKeepAlive(target, 0),
                     api.tx.system.remarkWithEvent(JSON.stringify(info))
                 ]
-                console.log(type)
+                console.log(type, target, JSON.stringify(info))
                 api.tx.utility.batchAll(batchAll).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: ISubmittableResult & {blockNumber: any}) => {
                     if (result.status.isFinalized) {
                         const blockNumber = result.blockNumber.toNumber()

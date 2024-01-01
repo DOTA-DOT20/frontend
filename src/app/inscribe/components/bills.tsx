@@ -17,7 +17,7 @@ export const Bills = (props: Props) => {
 
     return (
         <>
-        <div style={{border: '1px solid rgba(255, 255, 255, 0.20)', borderRadius: 25, width: 800, margin: '0px auto', padding: '10px 0  20px'}}>
+        <div style={{border: '1px solid rgba(255, 255, 255, 0.20)', borderRadius: 25, width: 800, margin: '15px auto 0', padding: '10px 0  20px'}}>
             <h3 className="m-4">Local Transfer Records</h3>
             <Table
                 isHeaderSticky
