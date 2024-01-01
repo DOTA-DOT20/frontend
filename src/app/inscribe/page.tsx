@@ -91,13 +91,11 @@ export default function Home() {
             const api = await getApi()
             const injector = await getInjectedAccount()
             if (injector) {
-                let batchAll = [api.tx.balances.transferKeepAlive(receiver || selectedAccount.address, 0)]
-                if (type == 'transfer') {
-                    console.log('transfer');
-                    batchAll.push(api.tx.system.remarkWithEvent(JSON.stringify(info)))
-                } else {
-                    batchAll.push(api.tx.system.remark(JSON.stringify(info)))
-                }
+                const batchAll = [
+                    api.tx.balances.transferKeepAlive(receiver || selectedAccount.address, 0),
+                    api.tx.system.remarkWithEvent(JSON.stringify(info))
+                ]
+                console.log(type)
                 api.tx.utility.batchAll(batchAll).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: ISubmittableResult & {blockNumber: any}) => {
                     if (result.status.isFinalized) {
                         const blockNumber = result.blockNumber.toNumber()
@@ -212,12 +210,13 @@ export default function Home() {
             setIsLoading(true)
             transfer(info, 'transfer', receiver)
                 .then((result) => {
+                    console.log(result);
                     addRecord({
                         tick,
                         from: selectedAccount.address,
                         to: receiver,
                         amt: +amount,
-                        hash: result.txHash
+                        hash: result.txHash.toString()
                     })
                     return handleTransition(result)
                 }, handleTransitionFail)
