@@ -42,6 +42,7 @@ interface Props {
     onTransfer: (meta: TransferInfo) => void
     onConnect: () => void
     isLoading: boolean
+    blockNumber: string
 }
 
 export const Transfer = (props: Props) => {
@@ -69,7 +70,7 @@ export const Transfer = (props: Props) => {
                 }
             })
         }
-    }, [selectedAccount]);
+    }, [selectedAccount, props.blockNumber]);
 
     const handleAmountChange = (value: string) => {
         const number = value.replace(/[^\d]/g, '');

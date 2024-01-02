@@ -211,12 +211,14 @@ export default function Home() {
             setIsLoading(true)
             transfer(info, 'transfer', receiver)
                 .then((result: any) => {
+                    const blockNumber = result.blockNumber.toNumber()
                     addRecord({
                         tick,
                         from: selectedAccount.address,
                         to: receiver,
                         amt: +amount,
-                        hash: result.txHash.toString()
+                        hash: result.txHash.toString(),
+                        blockNumber
                     })
                     return handleTransition(result)
                 }, handleTransitionFail)
@@ -290,6 +292,7 @@ export default function Home() {
                   isLoading={isLoading}
                   onTransfer={handleTransfer}
                   onConnect={handleConnect}
+                  blockNumber={blockNumber}
                 /> }
             </div>
             {

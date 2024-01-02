@@ -8,11 +8,12 @@ import 'echarts/lib/chart/pie';
 let isRequesting = false
 
 type Token = {
-    market_supply: number,
+    circulating_supply: number,
     total_supply: number,
     tick: string
-    holders: number
+    holder: number
     deploy_number: number
+    total_blocks: number
     start_block: number
 };
 
@@ -143,10 +144,9 @@ export default function Home() {
                     </thead>
                     <tbody>
                         {ticks.map((token: Token, index: number ) => {
-                            // const progress = (token.market_supply / token.total_supply * 100).toFixed(2);
                             const progress = Math.min(
                                 Math.max(
-                                    ((1 - ((18723993 - (+blockNumber)) / 42000)) * 100),
+                                    ((1 - ((18723993 - (+blockNumber || 0)) / token.total_blocks)) * 100),
                                     0
                                 ),
                                 100
@@ -163,10 +163,10 @@ export default function Home() {
                                             </div>
                                         </td>
                                         <td className="text-center">{token.total_supply}</td>
-                                        <td className="text-center">{blockNumber ? progress : '--'}%</td>
-                                        <td className="text-center">{token.holders}</td>
+                                        <td className="text-center">{(token.circulating_supply / token.total_supply).toFixed(2)}%</td>
+                                        <td className="text-center">{token.holder }</td>
                                         <td className="text-center">{token.start_block}</td>
-                                        <td className="text-center">{token.start_block + 42000}</td>
+                                        <td className="text-center">{token.start_block + token.total_blocks}</td>
                                         <td className="text-center">
                                             {selectedAccount?.address && (balanceList?.[token.tick] || '0')}
                                         </td>
