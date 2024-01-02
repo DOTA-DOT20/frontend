@@ -1,7 +1,11 @@
 'use client';
 
 import Image from "next/image";
-import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, Tooltip} from "@nextui-org/react";
+import {
+    Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, NavbarMenuToggle,
+    NavbarMenuItem,
+    NavbarMenu, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem,
+} from "@nextui-org/react";
 
 import NavLink from '../NavLink'
 import styles from './index.module.css'
@@ -13,7 +17,7 @@ import menuIcon from '@/icons/menu.svg'
 import {useConnectWallet} from "@/hooks/usePolkadot";
 import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
 import arrowIcon from "@/icons/arrow-down.svg";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 const menus = [
     {
@@ -51,6 +55,8 @@ function shotAddress(address: string) {
 
 export default function Header() {
 
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     const {
         allAccounts,
         selectedAccount,
@@ -83,9 +89,13 @@ export default function Header() {
     }, []);
 
 
-    return <div>
-        <h1 className={styles.header}>
-            <div className={styles.logo}>
+    return <Navbar onMenuOpenChange={setIsMenuOpen} className={styles.header}>
+        <NavbarContent>
+            <NavbarMenuToggle
+                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                className="sm:hidden"
+            />
+            <NavbarBrand>
                 <Image
                     src="/logo.svg"
                     alt="DOTA"
@@ -93,107 +103,76 @@ export default function Header() {
                     height={40}
                     priority
                 />
-            </div>
-            <div className={styles.menu}>
-                {menus.map((item:any) => {
-                    return (
-                        item.disabled ? <Tooltip content="coming soon" key={item.route}>
-                            <span className={styles.menuItem}>
-                                <Image
-                                    src={item.icon}
-                                    width={24}
-                                    height={24}
-                                    alt={item.name}
-                                    className={styles.menuIcon}
-                                />
-                            {item.name}
-                        </span>
-                        </Tooltip> : <NavLink key={item.route} href={item.route} className={styles.menuItem}>
-                            <Image
-                                src={item.icon}
-                                width={24}
-                                height={24}
-                                alt={item.name}
-                                className={styles.menuIcon}
-                            />
-                            {item.name}
-                        </NavLink>
-                    )
-                })}
-            </div>
+            </NavbarBrand>
+        </NavbarContent>
 
-            <div className={styles.mobileGroup}>
-                <div className={styles.dropDownMenu}>
-                    <Dropdown>
-                        <DropdownTrigger>
-                            <Image
-                                src={menuIcon}
-                                width={24}
-                                height={24}
-                                alt="menu"
-                                className={styles.menuIcon}
-                            />
-                        </DropdownTrigger>
+        <NavbarContent className="hidden sm:flex gap-4" justify="center">
+            {menus.map((item:any) => {
+                return  <NavbarItem key={item.route}>
+                    <NavLink key={item.route} href={item.route} className={styles.menuItem}>
+                        <Image
+                            src={item.icon}
+                            width={24}
+                            height={24}
+                            alt={item.name}
+                            className={styles.menuIcon}
+                        />
+                        {item.name}
+                    </NavLink>
+                </NavbarItem>
+            })}
+        </NavbarContent>
+        <NavbarContent justify="end">
+            <NavbarItem>
+                {
+                    selectedAccount ?
+                        <Dropdown>
+                            <DropdownTrigger>
+                                <Button className="btn bg-pink-500 hover:bg-sky-700 color-white">
+                                    <span>{selectedAccount.meta.name}<span className="hidden md:inline"> [ {shotAddress(selectedAccount.address)} ]</span></span>
+                                    {
+                                        allAccounts.length > 1 && <Image
+                                        src={arrowIcon}
+                                        width={12}
+                                        height={12}
+                                        alt="arrow"
+                                      />
+                                    }
+                                </Button>
+                            </DropdownTrigger>
 
-                        <DropdownMenu aria-label="Static Accounts" variant="flat">
-                            {menus.map((item: any) => {
-                                return <DropdownItem key={item.route}>
-                                    <NavLink key={item.route} href={item.route} className={styles.menuItem}>
-                                        {item.name}
-                                    </NavLink>
-                                </DropdownItem>
-                            })}
-                        </DropdownMenu>
-                    </Dropdown>
-                </div>
-
-                <div className={styles.logoMobile}>
-                    <Image
-                        src="/favicon.svg"
-                        alt="DOTA"
-                        width={30}
-                        height={30}
-                        priority
-                    />
-                </div>
-            </div>
-
-            {
-                selectedAccount ?
-                    <Dropdown>
-                        <DropdownTrigger>
-                            <Button className="btn bg-pink-500 hover:bg-sky-700 color-white">
-                                <span>{selectedAccount.meta.name}  [ {shotAddress(selectedAccount.address)} ]</span>
-                                {
-                                    allAccounts.length > 1 && <Image
-                                    src={arrowIcon}
-                                    width={12}
-                                    height={12}
-                                    alt="arrow"
-                                  />
-                                }
-                            </Button>
-                        </DropdownTrigger>
-
-                        <DropdownMenu aria-label="Static Accounts"
-                              variant="flat"
-                              selectionMode="single"
-                              selectedKeys={selectedAccount.address}
-                              onSelectionChange={handleSelectAccount}
-                        >
-                            {allAccounts.map((account) => (
-                                <DropdownItem key={account.address} onClick={() => setSelectedAccount(account)}>
-                                    {account.meta.name} [ {shotAddress(account.address)} ]
-                                </DropdownItem>
-                            ))}
-                        </DropdownMenu>
-                    </Dropdown>
-                : <Button className="btn bg-pink-500 hover:bg-sky-700 color-white" onClick={handleConnect}>
-                    Connect Wallet
-                </Button>
-            }
-
-        </h1>
-
-    </div>
+                            <DropdownMenu aria-label="Static Accounts"
+                                          variant="flat"
+                                          selectionMode="single"
+                                          selectedKeys={selectedAccount.address}
+                                          onSelectionChange={handleSelectAccount}
+                            >
+                                {allAccounts.map((account) => (
+                                    <DropdownItem key={account.address} onClick={() => setSelectedAccount(account)}>
+                                        {account.meta.name}<span> [ {shotAddress(account.address)} ]</span>
+                                    </DropdownItem>
+                                ))}
+                            </DropdownMenu>
+                        </Dropdown>
+                        : <Button className="btn bg-pink-500 hover:bg-sky-700 color-white" onClick={handleConnect}>
+                            Connect Wallet
+                        </Button>
+                }
+            </NavbarItem>
+        </NavbarContent>
+        <NavbarMenu>
+            {menus.map((item, index) => (
+                <NavbarMenuItem key={`${item.route}-${index}`}>
+                    <Link
+                        className="w-full"
+                        corlo="foreground"
+                        size="lg"
+                        href={item.route}
+                    >
+                        {item.name}
+                    </Link>
+                </NavbarMenuItem>
+            ))}
+        </NavbarMenu>
+    </Navbar>
 }
