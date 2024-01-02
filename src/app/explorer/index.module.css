@@ -1,0 +1,57 @@
+.tableContainer {
+  border-radius: 40px;
+  border-color: rgba(255 255 255 / 0.20);
+}
+
+.table {
+  min-width: 1200px;
+}
+
+.tableHeader {
+  background-color: #252024;
+}
+
+.tableRow {
+  border-color: rgba(255 255 255 / 0.10);
+}
+
+.progressAll {
+  background-color: #41122B;
+}
+
+.progressDone {
+  background-color: #DE0376;
+}
+
+.searchInput {
+  background-color: transparent;
+}
+
+.searchInput:focus {
+  outline: none;
+}
+
+.searchButton {
+  background: #DE0376;
+}
+
+.searchBox {
+  border-radius: 30px;
+}
+
+.section {
+  border-radius: 20px;
+  border: 1px solid rgba(255 255 255 / 0.10);
+  flex: 1;
+  height: 360px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.section::-webkit-scrollbar {
+  display: none;
+}
+
+.section ~ .section {
+  margin-left: 20px;
+}

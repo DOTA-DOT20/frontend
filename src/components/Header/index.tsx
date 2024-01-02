@@ -13,7 +13,7 @@ import styles from './index.module.css'
 import marketIcon from '@/icons/building.svg'
 import currencyIcon from '@/icons/currency.svg'
 import starIcon from '@/icons/star.svg'
-import menuIcon from '@/icons/menu.svg'
+import compassIcon from '@/icons/compass.svg'
 import {useConnectWallet} from "@/hooks/usePolkadot";
 import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
 import arrowIcon from "@/icons/arrow-down.svg";
@@ -35,12 +35,12 @@ const menus = [
         route: '/inscribe',
         icon: starIcon,
     },
-    // {
-    //     name: 'EXPLORER',
-    //     route: '/explorer',
-    //     icon: compassIcon,
-    //     disabled: true
-    // },
+    {
+        name: 'EXPLORER',
+        route: '/explorer',
+        icon: compassIcon,
+        disabled: true
+    },
     // {
     //     name: 'BALANCE',
     //     route: '/own',
@@ -72,11 +72,11 @@ export default function Header() {
     }
 
     const handleConnect = async () => {
-        const { isWeb3Injected } = await import(
+        const {isWeb3Injected} = await import(
             "@polkadot/extension-dapp"
             );
 
-        if(isWeb3Injected) {
+        if (isWeb3Injected) {
             await connect()
         } else {
             console.log('eee')
@@ -89,7 +89,10 @@ export default function Header() {
     }, []);
 
 
-    return <Navbar onMenuOpenChange={setIsMenuOpen} className={styles.header}>
+    return <Navbar
+        onMenuOpenChange={setIsMenuOpen}
+        className={styles.header}
+        maxWidth="full">
         <NavbarContent>
             <NavbarMenuToggle
                 aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -106,9 +109,9 @@ export default function Header() {
             </NavbarBrand>
         </NavbarContent>
 
-        <NavbarContent className="hidden sm:flex gap-4" justify="center">
-            {menus.map((item:any) => {
-                return  <NavbarItem key={item.route}>
+        <NavbarContent className="hidden sm:flex gap-6" justify="center">
+            {menus.map((item: any) => {
+                return <NavbarItem key={item.route}>
                     <NavLink key={item.route} href={item.route} className={styles.menuItem}>
                         <Image
                             src={item.icon}
@@ -129,7 +132,8 @@ export default function Header() {
                         <Dropdown>
                             <DropdownTrigger>
                                 <Button className="btn bg-pink-500 hover:bg-sky-700 color-white">
-                                    <span>{selectedAccount.meta.name}<span className="hidden md:inline"> [ {shotAddress(selectedAccount.address)} ]</span></span>
+                                    <span>{selectedAccount.meta.name}<span
+                                        className="hidden md:inline"> [ {shotAddress(selectedAccount.address)} ]</span></span>
                                     {
                                         allAccounts.length > 1 && <Image
                                         src={arrowIcon}
