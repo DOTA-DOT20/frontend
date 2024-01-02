@@ -38,9 +38,9 @@ export const post = <T extends object>(url: string, data  = {} as T) => {
   })
 }
 
-export const get = (url: string, params = {}) => {
+export const get = <T>(url: string, params = {}) => {
   return new Promise((resolve, reject) => {
-    axiosInstance.get(url, { params }).then(response => {
+    axiosInstance.get<T>(url, { params }).then(response => {
       resolve(response.data)
     }).catch(err => {
       reject(err)

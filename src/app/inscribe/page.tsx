@@ -210,7 +210,7 @@ export default function Home() {
             console.log(info);
             setIsLoading(true)
             transfer(info, 'transfer', receiver)
-                .then((result) => {
+                .then((result: any) => {
                     console.log(result);
                     addRecord({
                         tick,

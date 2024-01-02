@@ -1,6 +1,6 @@
 "use client"
 import  styles from "./index.module.css";
-import { getTickList, getBalanceList } from '@/request/index'
+import {getTickList, getBalanceList, BalanceItem} from '@/request/index'
 import React, {useRef, useEffect, useState} from "react";
 import {useConnectWallet} from "@/hooks/usePolkadot";
 import 'echarts/lib/chart/pie';
@@ -24,7 +24,9 @@ export default function Home() {
     const [total, setTotal] = useState(0)
     const pageSize = 10
     const [keyword, setKeyword] = useState('')
-    const [balanceList, setBalanceList] = useState()
+    const [balanceList, setBalanceList] = useState<{
+        [tick: string]: string
+    }>({})
     const [blockNumber, setBlockNumber] = useState(0)
 
     const {
@@ -39,15 +41,16 @@ export default function Home() {
             tick: defaultTick
         }
         try {
-            const { balance } = await getBalanceList(data)
+            const res: any = await getBalanceList(data)
+            const balance = res?.balance as BalanceItem[]
             if (balance) {
                 const list = balance.reduce((prev, item) => {
                     return {
                         ...prev,
-                        [item.tick]: (item.available * 1).toFixed(0)
+                        [item.tick]: parseFloat(item.available).toFixed(0)
                     }
                 }, {});
-                setBalanceList(balance.length ? list : {[defaultTick]: 0})
+                setBalanceList(balance.length ? list : {[defaultTick]: '0'})
             }
         } catch (error: any) {
             console.log(error.message)
@@ -63,7 +66,8 @@ export default function Home() {
         if (keyword) {
             data['keyword'] = keyword
         }
-        const { ticks, total } = await getTickList(data)
+        const res:any = await getTickList(data)
+        const { ticks, total } = res
         if (ticks) {
             setTicks(ticks)
             setTotal(Math.ceil(total / pageSize))

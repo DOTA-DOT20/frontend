@@ -5,10 +5,11 @@ import Loading from "@/components/Loading";
 import React, {useEffect, useMemo, useState} from "react";
 import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
 import TickSelector from "@/components/TickSelector";
-import {requestBalance} from "@/request";
+import {BalanceItem, requestBalance} from "@/request";
 import {useConnectWallet} from "@/hooks/usePolkadot";
 import {formatNumberWithCommas} from "@/utils/format";
 import styles from "@/app/inscribe/index.module.css";
+import {Balance} from "@polkadot/types/interfaces";
 
 export interface TransferInfo {
     tick: string
@@ -52,10 +53,11 @@ export const Transfer = (props: Props) => {
     const [{ data }, getBalance]  = requestBalance()
 
     const totalBalance = useMemo(() => {
-        const balance = data?.balance || []
-        return (
-            (balance.find(item => item.tick === tick)?.available || 0) * 1
-        ).toFixed(0)
+        const balance: BalanceItem[] = data?.balance || []
+        const amount = (balance.find((item) => item.tick === tick)?.available || '1') as string;
+        return parseFloat(
+            (parseFloat(amount)).toFixed(0)
+        )
     }, [data, tick])
 
     useEffect(() => {
@@ -78,7 +80,7 @@ export const Transfer = (props: Props) => {
         const number = parseInt(amount)
         if(isNumber(number) && !isNaN(number)) {
             if(number > totalBalance) {
-                setAmount(totalBalance)
+                setAmount(totalBalance.toFixed(0))
             }
         } else {
             setAmount('')
@@ -86,7 +88,7 @@ export const Transfer = (props: Props) => {
     }
 
     const handleMaxBalance = () => {
-        setAmount(totalBalance)
+        setAmount(totalBalance.toFixed(0))
     }
 
     const handleReceiver = (value: string) => {

@@ -1,10 +1,19 @@
 import { get, useAxios} from './request'
 
+
 export const getTickList = (data = {}) => get('/v1/get_tick_list', data)
-export const getBalanceList = (data = {}) => get('/v1/get_account_balance', data)
+
+export interface BalanceItem {
+    tick: string
+    available: string
+}
+
+type AccountBalanceResponse = { balance: BalanceItem[], total: number };
+export const getBalanceList = (data = {}) => get<AccountBalanceResponse>('/v1/get_account_balance', data)
+
 
 export const requestBalance = () => {
-    return useAxios({
+    return useAxios<AccountBalanceResponse>({
         url: '/v1/get_account_balance',
         method: "GET"
     }, {
