@@ -6,7 +6,7 @@ import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
 import {accountState} from "@/stores/account";
 import {useMemo, useState} from "react";
 
-const provider = new WsProvider('wss://eosla.com');
+const provider = new WsProvider('wss://rect.me');
 
 const ss58Format = 42;
 

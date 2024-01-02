@@ -3,7 +3,7 @@
 import {RadioGroup, Radio, Button} from "@nextui-org/react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 import  styles from "./index.module.css";
-import React, {ChangeEvent, useEffect, useMemo, useState} from "react";
+import React, { ChangeEvent, useEffect, useState} from "react";
 import { ISubmittableResult } from "@polkadot/types/types";
 import { useConnectWallet } from "@/hooks/usePolkadot";
 import { Mint, MintInfo } from "./components/mint";
@@ -211,7 +211,6 @@ export default function Home() {
             setIsLoading(true)
             transfer(info, 'transfer', receiver)
                 .then((result: any) => {
-                    console.log(result);
                     addRecord({
                         tick,
                         from: selectedAccount.address,
