@@ -36,8 +36,7 @@ export const Bills = (props: Props) => {
                     <TableColumn style={{background: '#252024'}} key="amt">Amt</TableColumn>
                     <TableColumn style={{background: '#252024'}} key="formatHash">Tx Hash</TableColumn>
                 </TableHeader>
-                <TableBody
-                >
+                <TableBody>
                     {bills.map((item: TransferRecord) => (
                         <TableRow key={item.hash} style={{borderTop: '1px solid rgba(255, 255, 255, 0.20)', height: 60}}>
                             <TableCell><TransferStatus hash={item.hash} blockNumber={props.blockNumber} /></TableCell>

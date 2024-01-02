@@ -35,12 +35,12 @@ const menus = [
         route: '/inscribe',
         icon: starIcon,
     },
-    {
-        name: 'EXPLORER',
-        route: '/explorer',
-        icon: compassIcon,
-        disabled: true
-    },
+    // {
+    //     name: 'EXPLORER',
+    //     route: '/explorer',
+    //     icon: compassIcon,
+    //     disabled: true
+    // },
     // {
     //     name: 'BALANCE',
     //     route: '/own',
@@ -169,7 +169,7 @@ export default function Header() {
                 <NavbarMenuItem key={`${item.route}-${index}`}>
                     <Link
                         className="w-full"
-                        corlo="foreground"
+                        color="foreground"
                         size="lg"
                         href={item.route}
                     >

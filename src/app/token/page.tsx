@@ -1,9 +1,11 @@
 "use client"
 import  styles from "./index.module.css";
 import {getTickList, getBalanceList, BalanceItem} from '@/request/index'
-import React, {useRef, useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {useConnectWallet} from "@/hooks/usePolkadot";
-import 'echarts/lib/chart/pie';
+import Image from "next/image";
+import goIcon from "@/icons/go.svg";
+import Link from "next/link";
 
 let isRequesting = false
 
@@ -18,7 +20,7 @@ type Token = {
 };
 
 
-export default function Home() {
+export default function TokenList() {
     const [ticks, setTicks] = useState([])
     const [inputWord, setInputword] = useState('')
     const [page, setPage] = useState(1)
@@ -122,7 +124,7 @@ export default function Home() {
         setInputword(e.target.value)
     }
     return (
-        <main className="min-h-full md:px-24 px-8 py-24 w-full">
+        <main className="min-h-full md:px-16 px-8 py-16 w-full">
             <div className={`max-w-3xl mx-auto flex justify-between items-center border px-5 py-2 mb-16 ${styles.searchBox}`}>
                 <input type="text" className={`grow h-12 rounded-xl md:px-5 py-4 ${styles.searchInput}`} placeholder="Please input token name..." onChange={keywordChange} onKeyDown={inputKeydown} />
                 <button className={`w-40 h-10 p-2 rounded-3xl text-white ${styles.searchButton}`} onClick={search}>Search</button>
@@ -164,7 +166,14 @@ export default function Home() {
                                         </td>
                                         <td className="text-center">{token.total_supply}</td>
                                         <td className="text-center">{(token.circulating_supply / token.total_supply).toFixed(2)}%</td>
-                                        <td className="text-center">{token.holder }</td>
+                                        <td className="text-center">
+                                            <div className="flex justify-center items-center gap-2">
+                                                {token.holder}
+                                                {token.holder && <Link href={`/token/${token.tick}/holders`}>
+                                                  <Image src={goIcon} width={16} height={16} alt="go to holders" />
+                                                </Link>}
+                                            </div>
+                                        </td>
                                         <td className="text-center">{token.start_block}</td>
                                         <td className="text-center">{token.start_block + token.total_blocks}</td>
                                         <td className="text-center">
