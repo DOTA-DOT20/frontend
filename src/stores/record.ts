@@ -9,6 +9,7 @@ export type TransferRecord = {
     to: string,
     amt: number,
     hash: string,
+    blockNumber: string
 }
 export const transferRecordState = atom<TransferRecord[]>({
     key: 'transferRecord',
