@@ -7,6 +7,7 @@ import Image from "next/image";
 
 type Props = {
     hash: string
+    blockNumber: string
 }
 const TransferStatus = (props:Props) => {
     const { hash, blockNumber } = props
