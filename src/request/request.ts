@@ -3,7 +3,7 @@ import { makeUseAxios, Options } from 'axios-hooks'
 
 export const axiosInstance = axios.create({
   timeout: 100000,
-  baseURL: 'https://test.dota.fyi',
+  baseURL: 'https://dota.fyi',
 })
 
 
