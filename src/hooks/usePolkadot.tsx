@@ -8,7 +8,7 @@ import {useMemo, useState} from "react";
 
 const provider = new WsProvider('wss://degen.auction');
 
-const ss58Format = 42;
+const ss58Format = 0;
 
 export const useConnectWallet = () => {
     const [selectedAccount, setSelectedAccount] = useRecoilState<InjectedAccountWithMeta>(accountState);

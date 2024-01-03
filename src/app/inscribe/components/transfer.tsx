@@ -17,8 +17,7 @@ export interface TransferInfo {
     receiver: string
 }
 
-// const polkadotAddressRegex = /^1[a-zA-Z0-9]{24,}$/;
-const polkadotAddressRegex = /^5[a-zA-Z0-9]{24,}$/;
+const polkadotAddressRegex = /^1[a-zA-Z0-9]{24,}$/;
 
 const customMessages = {
     'string.pattern.base': '{{#label}} must match the specified DOT address format'
