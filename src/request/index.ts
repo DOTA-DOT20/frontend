@@ -24,7 +24,7 @@ type Tick = {
     start_block: number
 };
 export const requestTicks = () => {
-    return useAxios<{ticks: Tick[], total: number}>({
+    return useAxios<{ticks: Tick[], total_address: number}>({
         url: '/v1/get_tick_list',
         method: "GET"
     })

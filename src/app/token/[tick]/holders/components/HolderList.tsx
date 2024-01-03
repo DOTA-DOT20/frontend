@@ -35,7 +35,7 @@ export default function HolderList(props: Props) {
     }, [tickData]);
 
     const pages = useMemo(() => {
-        return data?.total ? Math.ceil(data?.total / pageSize) : 1
+        return data?.total_address ? Math.ceil(data?.total_address / pageSize) : 1
     }, [data]);
 
     const list = data?.balance_list || []
