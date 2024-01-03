@@ -24,7 +24,7 @@ type Tick = {
     start_block: number
 };
 export const requestTicks = () => {
-    return useAxios<{ticks: Tick[], total_address: number}>({
+    return useAxios<{ticks: Tick[], total: number}>({
         url: '/v1/get_tick_list',
         method: "GET"
     })
@@ -49,7 +49,7 @@ export interface HolderItem {
 export const requestBalanceList = (config: AxiosRequestConfig) => {
     return useAxios<{
         balance_list: HolderItem[],
-        total:number
+        total_address:number
     }>({
         url: '/v1/get_balance_list',
         method: "GET",
