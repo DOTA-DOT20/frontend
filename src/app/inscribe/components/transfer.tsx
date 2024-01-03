@@ -55,7 +55,7 @@ export const Transfer = (props: Props) => {
 
     const totalBalance = useMemo(() => {
         const balance: BalanceItem[] = data?.balance || []
-        const amount = (balance.find((item) => item.tick === tick)?.available || '1') as string;
+        const amount = (balance.find((item) => item.tick === tick)?.available || '0') as string;
         return parseFloat(
             (parseFloat(amount)).toFixed(0)
         )
