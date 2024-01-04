@@ -45,7 +45,7 @@ export default function HolderList(props: Props) {
     }
 
     return (
-        <main className="min-h-full md:px-16 px-8 py-16 w-full">
+        <main className="min-h-full md:px-16 px-8 py-16 w-full overflow-x-auto overflow-y-hidden">
             <h2 className="mb-2 text-2xl">{props.tick} <span className="text-lg">Holders</span></h2>
 
             <div className={styles.tableContainer}>
