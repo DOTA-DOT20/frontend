@@ -1,5 +1,6 @@
 "use client"
 import  styles from "./index.module.css";
+import { Spinner } from '@nextui-org/react'
 import {getTickList, getBalanceList, BalanceItem} from '@/request/index'
 import React, { useEffect, useState } from "react";
 import {useConnectWallet} from "@/hooks/usePolkadot";
@@ -160,12 +161,18 @@ export default function TokenList() {
                                         <td className="text-center">{index + 10 * (page - 1) + 1}</td>
                                         <td className="text-center">{token.tick}</td>
                                         <td className="h-24 flex justify-center items-center">
-                                            <div className={`h-4 rounded-xl ${styles.progressAll}`} style={{width: 200}}>
-                                                <div className={`h-4 rounded-xl ${styles.progressDone}`} style={{width: progress + '%'}}></div>
-                                            </div>
+                                            {
+                                                !!blockNumber ? <div className={`h-4 rounded-xl ${styles.progressAll}`} style={{width: 200}}>
+                                                    <div className={`h-4 rounded-xl ${styles.progressDone}`} style={{width: progress + '%'}}></div>
+                                                </div> : <Spinner size="sm"/>
+                                            }
                                         </td>
                                         <td className="text-center">{token.total_supply}</td>
-                                        <td className="text-center">{(token.circulating_supply / token.total_supply * 100) .toFixed(2)}%</td>
+                                        <td className="text-center">
+                                            {
+                                                !!blockNumber ? `${progress}%` : <Spinner size="sm"/>
+                                            }
+                                        </td>
                                         <td className="text-center">
                                             <div className="flex justify-center items-center gap-2">
                                                 {token.holder}
