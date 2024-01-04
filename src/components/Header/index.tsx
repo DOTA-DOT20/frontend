@@ -92,7 +92,11 @@ export default function Header() {
     return <Navbar
         onMenuOpenChange={setIsMenuOpen}
         className={styles.header}
-        maxWidth="full">
+        maxWidth="full"
+        classNames={{
+            wrapper: 'px-2 md:px-4'
+        }}
+    >
         <NavbarContent>
             <NavbarMenuToggle
                 aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -108,7 +112,6 @@ export default function Header() {
                 />
             </NavbarBrand>
         </NavbarContent>
-
         <NavbarContent className="hidden sm:flex gap-6" justify="center">
             {menus.map((item: any) => {
                 return <NavbarItem key={item.route}>

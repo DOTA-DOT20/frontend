@@ -46,8 +46,6 @@ span.menuItem {
 
 @media (max-width: 900px) {
     .header {
-        justify-content: space-between;
-        padding: 0 15px;
 
         .logo {
             display: none;
