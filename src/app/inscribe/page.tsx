@@ -256,7 +256,7 @@ export default function Home() {
     }
 
     return (
-        <div className="p-12">
+        <div className="p-4 md:p-12">
             <h2 className={styles.title}>Dota Inscribe</h2>
             <p className={styles.subTitle}>Start your new inscribe on dot-20</p>
             <div className={styles.content}>

@@ -60,7 +60,7 @@
 }
 
 .formItem {
-    width: 500px;
+    max-width: 500px;
     margin: 20px auto;
     position: relative;
 }
@@ -125,15 +125,6 @@
 
     .formItem label {
         width: 80px;
-    }
-
-    .formItem input[type="text"],
-    .formItem input[type="number"] {
-        height: 40px;
-    }
-
-    .formItem :global(.select) [data-slot="trigger"] {
-        height: 40px;
     }
 
     .option {

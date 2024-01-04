@@ -127,7 +127,7 @@ export const Transfer = (props: Props) => {
                                 base: 'flex',
                                 mainWrapper: 'flex-1'
                             }}
-                            style={{height: 50, width: 320}}
+                            style={{height: 50, maxWidth: 320}}
                         />
                         <a onClick={handleMaxBalance} className={styles.allBalance}>Max</a>
                         {
@@ -148,7 +148,7 @@ export const Transfer = (props: Props) => {
                                 base: 'flex',
                                 mainWrapper: 'flex-1'
                             }}
-                            style={{height: 50, width: 320}}
+                            style={{height: 50, maxWidth: 320}}
                         />
                     </div>
                     <p className={styles.tip}>Tips: DOTA's transfer function is currently being tested. Please refrain from using the transfer function until it is officially announced and enabled on  <a className="text-primary decoration-solid" href="https://twitter.com/dot20_dota" target="_blank">Twitter</a>.</p>
