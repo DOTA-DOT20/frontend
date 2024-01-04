@@ -165,7 +165,7 @@ export default function TokenList() {
                                             </div>
                                         </td>
                                         <td className="text-center">{token.total_supply}</td>
-                                        <td className="text-center">{(token.circulating_supply / token.total_supply).toFixed(2)}%</td>
+                                        <td className="text-center">{(token.circulating_supply / token.total_supply * 100) .toFixed(2)}%</td>
                                         <td className="text-center">
                                             <div className="flex justify-center items-center gap-2">
                                                 {token.holder}
