@@ -6,7 +6,7 @@ import {InjectedAccountWithMeta} from "@polkadot/extension-inject/types";
 import {accountState} from "@/stores/account";
 import {useMemo, useState} from "react";
 
-const provider = new WsProvider('wss://rpc.ibp.network/polkadot');
+const provider = new WsProvider('wss://degen.auction');
 
 const ss58Format = 0;
 

@@ -1,22 +1,26 @@
 "use client"
 
-import {RadioGroup, Radio, Input, Button} from "@nextui-org/react";
+import {RadioGroup, Radio, Button} from "@nextui-org/react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 import  styles from "./index.module.css";
-import React, {ChangeEvent, useEffect, useMemo, useState} from "react";
-import Loading from "@/components/Loading";
-import {ISubmittableResult} from "@polkadot/types/types";
-import {useConnectWallet} from "@/hooks/usePolkadot";
+import React, { ChangeEvent, useEffect, useState} from "react";
+import { ISubmittableResult } from "@polkadot/types/types";
+import { useConnectWallet } from "@/hooks/usePolkadot";
+import { Mint, MintInfo } from "./components/mint";
+import {Deploy, DeployInfo} from "@/app/inscribe/components/deploy";
+import {Transfer, TransferInfo, transferSchema} from "@/app/inscribe/components/transfer";
+import { Bills } from "./components/bills";
+import {useRecords} from "@/app/inscribe/hooks/useRecords";
 
 export default function Home() {
     const end = 18723993
 
     const [checkedType, setChecked] = useState('mint')
-
-    const [tick, setTick] = useState("DOTA");
-    const [amount, setAmount] = useState("500000");
     const [blockNumber, setBlockNumber] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [page, setPage] = React.useState(1);
+
+    const { records, addRecord } = useRecords()
 
     const [modalInfo, setModalInfo] = useState<{
         open: boolean,
@@ -32,7 +36,8 @@ export default function Home() {
 
     async function subscribeNewHeads() {
         const api = await getApi()
-        await api.rpc.chain.subscribeNewHeads(async (header:any) => {
+        console.log('subscribeNewHeads');
+        return await api.rpc.chain.subscribeNewHeads(async (header:any) => {
             console.log(`Chain is at block: #${header.number}`);
             const blockNumber = header.number
             console.log(blockNumber.toString());
@@ -41,29 +46,60 @@ export default function Home() {
     }
 
     useEffect(() => {
-        subscribeNewHeads()
+        let unsubscribe: any;
+        console.log('useEffect');
+        subscribeNewHeads().then((res) => {
+            unsubscribe = res
+        })
+        return () =>  {
+            if(unsubscribe) {
+                unsubscribe?.()
+                console.log('unsubscribe');
+            }
+        }
     }, []);
 
+    const handleTransition = (result: any) => {
+        const hash = result.txHash
+        const url = `https://polkadot.subscan.io/extrinsic/${hash}`
+        setModalInfo({
+            open: true,
+            title: 'Transition Success',
+            content: <>
+                <p>Transaction successful, please wait for the indexer to confirm.</p>
+                {hash && <a href={url} target="_blank">Subscan</a>}
+            </>
+        })
+    }
 
+    const handleTransitionFail = (error: Error) => {
+        console.log(error);
+        setModalInfo({
+            open: true,
+            title: 'Transition Fail',
+            content: <>
+                <p>{error.toString()}</p>
+            </>
+        })
+    }
     const handleChanged = (event: ChangeEvent<any>) => {
-        setTick('')
-        setAmount('')
         setChecked(event.target.value)
     }
 
-    const transfer = async (info: any, type: any) => {
+    const transfer = async (info: any, type: string, receiver?: string) => {
         return new Promise(async (resolve, reject) => {
             const api = await getApi()
             const injector = await getInjectedAccount()
             if (injector) {
-                api.tx.utility.batchAll([
-                    api.tx.balances.transferKeepAlive(selectedAccount.address, 0),
-                    api.tx.system.remark(JSON.stringify(info)),
-                ]).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: ISubmittableResult & {blockNumber: any}) => {
-                    console.log(result);
-                    if (result.status.isInBlock) {
-                    } else if (result.status.isFinalized) {
-                        let blockNumber = result.blockNumber.toNumber()
+                const target = receiver || selectedAccount.address;
+                const batchAll = [
+                    api.tx.balances.transferKeepAlive(target, 0),
+                    api.tx.system.remarkWithEvent(JSON.stringify(info))
+                ]
+                console.log(type, target, JSON.stringify(info))
+                api.tx.utility.batchAll(batchAll).signAndSend(selectedAccount.address, { signer: injector.signer }, (result: ISubmittableResult & {blockNumber: any}) => {
+                    if (result.status.isFinalized) {
+                        const blockNumber = result.blockNumber.toNumber()
                         console.log('success! blockNumber:', blockNumber)
                         resolve(result)
                     }
@@ -76,8 +112,10 @@ export default function Home() {
         })
     }
 
-    const handleDeploy = async () => {
-        if(!tick || !amount  || !blockNumber) {
+    const handleDeploy = async (meta: DeployInfo) => {
+        const { tick, amount } = meta
+
+        if( !tick || !amount  || !meta.blockNumber ) {
             setModalInfo({
                 open: true,
                 title: 'Tips',
@@ -88,53 +126,35 @@ export default function Home() {
             return false
         }
 
+        if( +meta.blockNumber < +blockNumber ) {
+            setModalInfo({
+                open: true,
+                title: 'Tips',
+                content: <>
+                    <p>The `BlockNumber` field must be greater than the current block; otherwise, the deployment is invalid.</p>
+                </>
+            })
+            return false
+        }
 
-        let info = {
+        const info = {
             p: "dot-20",
             op: "deploy",
             tick,
             amt: +amount,
-            start: +blockNumber + 20,
+            start: +meta.blockNumber,
         }
+
         if(selectedAccount?.address) {
             setIsLoading(true)
-            transfer(info, 'deploy').then((result:any) => {
-                const hash = result.txHash
-                const url = `https://polkadot.subscan.io/extrinsic/${hash}`
-                setModalInfo({
-                    open: true,
-                    title: 'Deploy Success',
-                    content:<>
-                        <p>Deploy transition success, please check token list later</p>
-                        {hash && <a href={url} target="_blank">subscan</a>}
-                    </>
-                })
-            }, (error) => {
-                setModalInfo({
-                    open: true,
-                    title: 'Deploy Fail',
-                    content: <>
-                        <p>{error.toString()}</p>
-                    </>
-                })
-            })
+            transfer(info, 'deploy')
+                .then(handleTransition, handleTransitionFail)
         } else {
             await connect()
         }
     }
 
-    const handleAmountChange = (value: string) => {
-        const number = value.replace(/[^\d]/g, '');
-        setAmount(number);
-    }
-
-    const handleBlockNumberChange = (value: string) => {
-        const number = value.replace(/[^\d]/g, '');
-        setBlockNumber(number);
-    }
-
-
-    const handleMint = async () => {
+    const handleMint = async ({ tick }: MintInfo) => {
         if (+blockNumber > end) {
             setModalInfo({
                 open: true,
@@ -155,46 +175,61 @@ export default function Home() {
             })
             return false
         }
-
-        let info = {
+        const info = {
             p: "dot-20",
             op: "mint",
             tick
         }
         if(selectedAccount?.address) {
             setIsLoading(true)
-            transfer(info, 'mint').then((result: any) => {
-                const hash = result.txHash
-                const url = `https://polkadot.subscan.io/extrinsic/${hash}`
-                setModalInfo({
-                    open: true,
-                    title: 'Mint Success',
-                    content: <>
-                        <p>Mint tx success, please check your balance later</p>
-                        {hash && <a href={url} target="_blank">subscan</a>}
-                    </>
-                })
-            }, (error) => {
-                console.log(error);
-                setModalInfo({
-                    open: true,
-                    title: 'Mint Fail',
-                    content: <>
-                        <p>{error.toString()}</p>
-                    </>
-                })
-            })
+            transfer(info, 'mint')
+                .then(handleTransition, handleTransitionFail)
         } else {
             await connect()
         }
     }
 
+    const handleTransfer = async (meta: TransferInfo) => {
+        const { tick, amount, receiver } = meta
+        const result = transferSchema.validate(meta);
+        if(result.error) {
+            setModalInfo({
+                open: true,
+                title: 'Tips',
+                content: <>
+                <p>{result.error.message}</p>
+            </>
+            })
+        } else {
+            const info = {
+                p: "dot-20",
+                op: "transfer",
+                tick,
+                amt: +amount
+            }
+            console.log(info);
+            setIsLoading(true)
+            transfer(info, 'transfer', receiver)
+                .then((result: any) => {
+                    const blockNumber = result.blockNumber.toNumber()
+                    addRecord({
+                        tick,
+                        from: selectedAccount.address,
+                        to: receiver,
+                        amt: +amount,
+                        hash: result.txHash.toString(),
+                        blockNumber
+                    })
+                    return handleTransition(result)
+                }, handleTransitionFail)
+        }
+
+    }
+
     const handleConnect = async () => {
-
         const { isWeb3Injected } = await import(
-            "@polkadot/extension-dapp"
-            );
-
+          "@polkadot/extension-dapp"
+        );
         if(isWeb3Injected) {
             try {
                 setIsLoading(true)
@@ -220,15 +255,8 @@ export default function Home() {
         })
     }
 
-    const totalAmount = useMemo(() => {
-        if(amount) {
-            return parseInt(amount) * 42000
-        }
-        return ''
-    }, [amount]);
-
     return (
-        <div className="p-12">
+        <div className="p-4 md:p-12">
             <h2 className={styles.title}>Dota Inscribe</h2>
             <p className={styles.subTitle}>Start your new inscribe on dot-20</p>
             <div className={styles.content}>
@@ -241,109 +269,35 @@ export default function Home() {
                         className={styles.group}
                     >
                         <Radio value="mint" classNames={{label: styles.option}}>Mint</Radio>
-                        <Radio value="deploy" isDisabled={true} classNames={{label: styles.option}}>Deploy</Radio>
-                        <Radio value="transfer" isDisabled={true} classNames={{label: styles.option}}>Transfer</Radio>
+                        <Radio value="deploy" isDisabled classNames={{label: styles.option}}>Deploy</Radio>
+                        <Radio value="transfer" classNames={{label: styles.option}}>Transfer</Radio>
                     </RadioGroup>
                 </div>
-                {checkedType === 'mint' && <>
-                  <div className={styles.contentBody}>
-                    <div className={styles.form}>
-                      <div className={styles.formItem}>
-                        <label htmlFor="name">Ticket</label>
-                        <Input
-                          placeholder="4 characters like 'DOTA'..."
-                          value={tick}
-                          onValueChange={setTick}
-                        />
-                      </div>
-                    </div>
-                    <p className={styles.tip}>Tips: If there are no minting accounts in the current block, the production of that block is destroyed.</p>
-                  </div>
-                  <div className={styles.contentFooter}>
-                      {
-                            selectedAccount?.address ?
-                                <Button className={`btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white ${+blockNumber > end ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                    size="lg"
-                                    onClick={handleMint}
-                                    isLoading={isLoading}
-                                    spinner={<Loading />}
-                                >
-                                    MINT
-                                </Button>
-                                :
-                                <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white"
-                                    size="lg"
-                                    onClick={handleConnect}
-                                    isLoading={isLoading}
-                                    spinner={<Loading />}
-                                >
-                                    CONNECT WALLET
-                                </Button>
-                        }
-                  </div>
-                </> }
-                {checkedType === 'deploy' && <>
-                  <div className={styles.contentBody}>
-                    <div className={styles.form}>
-                      <div className={styles.formItem}>
-                        <label htmlFor="name">Ticket</label>
-                        <Input
-                          placeholder="4 characters like 'DOTA'..."
-                          value={tick}
-                          onValueChange={setTick}
-                        />
-                      </div>
-                      <div className={styles.formItem}>
-                        <label htmlFor="name">Amount Per Block</label>
-                        <Input
-                            type="number"
-                            min={1}
-                            placeholder="Amount Per Block"
-                            value={amount}
-                            onValueChange={handleAmountChange}
-                        />
-                        </div>
-                      <div className={styles.formItem}>
-                        <label htmlFor="name">Start BlockNumber</label>
-                        <Input
-                          type="number"
-                          min={1}
-                          placeholder="BlockNumber"
-                          value={blockNumber}
-                          onValueChange={handleBlockNumberChange}
-                        />
-                      </div>
-                      <div className={styles.formItem}>
-                        <label htmlFor="name">Total</label>
-                        <div className={styles.formContent}>{totalAmount} {tick}</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.contentFooter}>
-                      {
-                        selectedAccount?.address ?
-                            <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white"
-                                size="lg"
-                                onClick={handleDeploy}
-                                isLoading={isLoading}
-                                spinner={<Loading />}
-                            >
-                                DEPLOY
-                            </Button>
-                            :
-                            <Button className="btn btn-large bg-pink-500 hover:bg-sky-700 flex-1 color-white"
-                                size="lg"
-                                onClick={handleConnect}
-                                isLoading={isLoading}
-                                spinner={<Loading />}
-                            >
-                                CONNECT WALLET
-                            </Button>
-                        }
-                  </div>
-                </> }
+                {checkedType === 'mint' && <Mint
+                  selectedAccount={selectedAccount}
+                  isLoading={isLoading}
+                  onMint={handleMint}
+                  onConnect={handleConnect}
+                  isEnd
+                /> }
+                {checkedType === 'deploy' && <Deploy
+                  selectedAccount={selectedAccount}
+                  isLoading={isLoading}
+                  onDeploy={handleDeploy}
+                  onConnect={handleConnect}
+                  blockNumber={blockNumber}
+                /> }
+                {checkedType === 'transfer' && <Transfer
+                  selectedAccount={selectedAccount}
+                  isLoading={isLoading}
+                  onTransfer={handleTransfer}
+                  onConnect={handleConnect}
+                  blockNumber={blockNumber}
+                /> }
             </div>
-
+            {
+                checkedType === 'transfer' && <Bills records={records}  blockNumber={blockNumber} />
+            }
             <Modal backdrop="blur" isOpen={modalInfo.open} onClose={handleModalClose}>
                 <ModalContent>
                     {(onClose) => (

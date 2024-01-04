@@ -1,8 +1,13 @@
-import axios from 'axios';
-let baseURL = 'https://api.dota.fyi'
-axios.defaults.timeout = 100000;
+import axios, {AxiosRequestConfig, Method} from 'axios';
+import { makeUseAxios, Options } from 'axios-hooks'
 
-axios.interceptors.request.use((config: any) => {
+export const axiosInstance = axios.create({
+  timeout: 100000,
+  baseURL: 'https://dota.fyi',
+})
+
+
+axiosInstance.interceptors.request.use((config: any) => {
   config.headers = {
     'content-type': 'application/json;charset=UTF-8'
   }
@@ -12,16 +17,20 @@ axios.interceptors.request.use((config: any) => {
   }
 )
 
-axios.interceptors.response.use(response => {
+axiosInstance.interceptors.response.use(response => {
   return response
 }, err => {
   return Promise.reject(err)
 })
 
+export const useAxios = makeUseAxios({
+  axios: axiosInstance,
+  cache: false,
+})
+
 export const post = <T extends object>(url: string, data  = {} as T) => {
-  url = `${baseURL}${url}`
   return new Promise((resolve, reject) => {
-    axios.post(url, data).then(response => {
+    axiosInstance.post(url, data).then(response => {
       resolve(response.data)
     }, err => {
       reject(err)
@@ -29,11 +38,9 @@ export const post = <T extends object>(url: string, data  = {} as T) => {
   })
 }
 
-
-export const get = (url: string, params = {}) => {
-  url = `${baseURL}${url}`
+export const get = <T>(url: string, params = {}) => {
   return new Promise((resolve, reject) => {
-    axios.get(url, { params }).then(response => {
+    axiosInstance.get<T>(url, { params }).then(response => {
       resolve(response.data)
     }).catch(err => {
       reject(err)

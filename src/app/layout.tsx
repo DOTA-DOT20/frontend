@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   description: '',
 }
 
+export const dynamicParams = true
+
 export default function RootLayout({
   children,
 }: {

@@ -1,12 +1,6 @@
 .header {
     --header-background: #252024;
-    color: #fff;
-    height: 80px;
     background-color: var(--header-background);
-    padding: 0 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 }
 
 .logo {
@@ -32,7 +26,7 @@
 }
 
 .menuItem {
-    padding: 5px 0;
+    padding: 7px 0;
     line-height: 24px;
 }
 
@@ -52,8 +46,6 @@ span.menuItem {
 
 @media (max-width: 900px) {
     .header {
-        justify-content: space-between;
-        padding: 0 15px;
 
         .logo {
             display: none;
@@ -74,4 +66,5 @@ span.menuItem {
         height: 30px;
         border-radius: 15px;
     }
+
 }
