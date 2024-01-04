@@ -24,7 +24,7 @@ export default function HolderList(props: Props) {
         params: {
             tick: props.tick,
             limit: pageSize,
-            offset: currentPage
+            offset: (currentPage-1) * pageSize
         }
     })
 
