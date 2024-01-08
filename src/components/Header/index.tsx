@@ -22,17 +22,17 @@ import {useEffect, useState} from "react";
 const menus = [
     {
         name: 'MARKETPLACE',
-        route: '/marketplace',
+        route: '/marketplace/',
         icon: marketIcon
     },
     {
         name: 'TOKEN',
-        route: '/token',
+        route: '/token/',
         icon: currencyIcon,
     },
     {
         name: 'INSCRIBE',
-        route: '/inscribe',
+        route: '/inscribe/',
         icon: starIcon,
     },
     // {

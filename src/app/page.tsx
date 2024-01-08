@@ -1,14 +1,17 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import {usePathname, useRouter} from 'next/navigation';
 import Image from "next/image";
 
 const HomePage = () => {
+    const pathname = usePathname()
     const router = useRouter();
 
     useEffect(() => {
-        router.push('/token');
+        if(pathname === '/') {
+            router.replace('/token');
+        }
     }, []);
 
     return (

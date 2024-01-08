@@ -141,7 +141,7 @@ export const Transfer = (props: Props) => {
                             label="Receive Address"
                             labelPlacement="outside-left"
                             type="text"
-                            placeholder="Please inout your address"
+                            placeholder="Please input your address"
                             value={receiver}
                             onValueChange={handleReceiver}
                             classNames={{
