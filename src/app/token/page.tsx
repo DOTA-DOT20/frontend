@@ -11,8 +11,8 @@ import Link from "next/link";
 let isRequesting = false
 
 type Token = {
-    circulating_supply: number,
-    total_supply: number,
+    circulating_supply: string,
+    total_supply: string,
     tick: string
     holder: number
     deploy_number: number
@@ -167,7 +167,7 @@ export default function TokenList() {
                                                 </div> : <Spinner size="sm"/>
                                             }
                                         </td>
-                                        <td className="text-center">{token.total_supply}</td>
+                                        <td className="text-center">{parseInt(token.total_supply)}</td>
                                         <td className="text-center">
                                             {
                                                 !!blockNumber ? `${progress}%` : <Spinner size="sm"/>
