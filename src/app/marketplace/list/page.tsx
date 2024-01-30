@@ -234,7 +234,7 @@ export default function MarketplaceList() {
 
       {listType === 4 ? holders() : cardList()}
 
-      {/* list */}
+      {/* List */}
       <Modal backdrop="blur" size="xl" isOpen={isOpenListOrder} onClose={() => setIsOpenListOrder(false)}>
         <ModalContent>
           {() => (
@@ -338,7 +338,7 @@ export default function MarketplaceList() {
         </ModalContent>
       </Modal>
 
-      {/* list */}
+      {/* Buy */}
       <Modal backdrop="blur" size="xl" isOpen={isOpenBuy} onClose={() => setIsOpenBuy(false)}>
         <ModalContent>
           {() => (
