@@ -1,0 +1,221 @@
+.tableContainer {
+  border-radius: 40px;
+  border-color: rgba(255 255 255 / 0.20);
+}
+
+.table {
+  min-width: 1200px;
+}
+
+.tableHeader {
+  background-color: #252024;
+}
+
+.tableRow {
+  border-color: rgba(255 255 255 / 0.10);
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.backText {
+  color: #FFF;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 24px;
+  margin-left: 12px;
+}
+.flex {
+  display: flex;
+  align-items: center;
+}
+.leftAuto {
+  margin-left: auto;
+}
+.info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 90px;
+  border-radius: 40px;
+  background: #252024;
+  padding: 15px;
+  margin-top: 20px;
+}
+.infoText {
+  color: #FFF;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 24px;
+  opacity: 0.8;
+}
+.infoContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.infoContentText {
+  color: #FFF;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  margin-left: 4px;
+}
+.groudArea {
+  margin-top: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ground {
+  display: flex;
+  align-items: center;
+}
+.groudItem {
+  margin-right: 20px;
+  width: 160px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  color: #FFF;
+  font-size: 16px;
+  font-weight: 600;
+  display: inline-block;
+  transition: all .3s;
+  cursor: pointer;
+}
+.groudItem.active {
+  border: 1px solid #DE0376;
+}
+.groudItem:last-of-type {
+  margin-right: 0;
+}
+.searchButton {
+  background: #DE0376;
+}
+.cardList {
+  display: grid;
+  justify-content: space-between;
+  /* grid-template-columns: repeat(auto-fill, 210px); */
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  grid-gap: 20px;
+}
+.cardItem {
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  background: rgba(255, 255, 255, 0.02);
+}
+.cardTitle {
+  text-align: center;
+  color: #FFF;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+  padding: 10px 0 8px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.20);
+}
+.cardContent {
+  text-align: center;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.20);
+  padding: 24px 0;
+}
+.cardContentText {
+  color: #FFF;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 48px;
+  margin-bottom: 20px;
+}
+.cardContentSecond {
+  color: rgba(255, 255, 255, 0.60);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.secondText {
+  color: #FFF;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+}
+.widthFull {
+  width: 100%;
+}
+.mgl4 {
+  margin-left: 4px;
+}
+.progressAll {
+  background-color: #41122B;
+}
+
+.progressDone {
+  background-color: #DE0376;
+}
+.borderBottom {
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.20);
+}
+.listInfo {
+  padding: 40px 0;
+}
+.listAmount {
+  color: #FFF;
+  text-align: center;
+  font-size: 36px;
+  font-weight: 600;
+  margin-left: 16px;
+  margin-right: 12px;
+}
+.listUnit {
+  color: #FFF;
+  font-size: 24px;
+  font-weight: 600;
+}
+.listAvailable {
+  color: rgba(255, 255, 255, 0.60);
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+.inputLabel {
+  width: 96px;
+  font-size: 16px;
+}
+.input {
+  border-radius: 25px;
+  flex: 1;
+  border: 1px solid rgba(255, 255, 255, 0.80);
+}
+.focus {
+  color: #DE0376;
+}
+
+@media screen and (max-width: 1240px) {
+  .info {
+    flex-wrap: wrap;
+    gap: 32px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .groudItem {
+    width: calc(25% - 6px);
+    margin-right: 8px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .groudArea {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .groudArea>div {
+    width: 100%;
+    margin-top: 12px;
+  }
+}
