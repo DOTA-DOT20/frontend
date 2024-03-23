@@ -1,0 +1,54 @@
+.content {
+  border-radius: 40px;
+  background: #000;
+  max-width: 768px;
+  padding: 25px 30px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  font-size: 48px;
+  font-weight: 600;
+}
+
+.subTitle {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 40px;
+}
+
+.swapTickBox {
+  position: relative;
+}
+.swapTickBox::before {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  margin-left: -20px;
+  z-index: 9;
+  width: 40px;
+  height: 40px;
+  background-color: #343033;
+  background-image: url("../../icons/swap.svg");
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 40px;
+  content: "";
+  border: #000 6px solid;
+}
+
+.cardBg {
+  background-color: #211e20;
+}
+.btnGrayBg {
+  background-color: #343033;
+}
+
+@media screen and (max-width: 768px) {
+  .content {
+    height: auto;
+  }
+}
