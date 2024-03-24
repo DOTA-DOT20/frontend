@@ -5,21 +5,18 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  useDisclosure,
 } from "@nextui-org/react";
 import useBridge from "../hooks/useBridge";
 import { useConnectWallet } from "@/hooks/usePolkadot";
 import { useState } from "react";
-import { web3FromAddress } from "@polkadot/extension-dapp";
 
 // The suggestions go in a.env file
 const address = "5GsmAhN2dKuyijc5qkh9kPJPt8YBLkN1KmYf7QWbsPKhenJd";
 
 const Swap: React.FC = () => {
-  const { selectedAccount, getApi } = useConnectWallet();
+  const { selectedAccount, getApi, getInjectedAccount } = useConnectWallet();
   const [swaping, setSwaping] = useState(false);
   const { dot20 } = useBridge();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [modalInfo, setModalInfo] = useState<{
     open: boolean;
     title: string;
@@ -71,59 +68,73 @@ const Swap: React.FC = () => {
     });
   };
 
-  const validprops = (): boolean => {
+  const validprops = (): Error | undefined => {
     const val = dot20?.inputValue ? parseInt(dot20.inputValue) : 0;
     const balance = dot20?.balance ?? 0;
     if (val <= 0) {
-      console.error("Please enter a number greater than 0");
-      return false;
+      return Error("Please enter a number greater than 0");
     }
     if (val > balance) {
-      console.error("Insufficient balance");
-      return false;
+      return Error("Insufficient balance");
     }
-    return true;
+    return undefined;
   };
 
   const handleSwap = async () => {
     setSwaping(true);
     const isvalid = validprops();
-    if (!isvalid) {
+    if (isvalid !== undefined) {
       setSwaping(false);
+      handleTransitionFail(isvalid);
       return;
     }
-    const api = await getApi();
-    const acc = selectedAccount;
-    if (!api || !acc) {
-      console.error("Api or account login issues");
-      setSwaping(false);
-      return;
-    }
-    const injector = await web3FromAddress(acc.address);
-    const batchAll = [
-      api.tx.balances.transferKeepAlive(address, 0),
-      api.tx.system.remarkWithEvent(
-        JSON.stringify({
-          p: "dot-20",
-          op: "transfer",
-          tick: "DOTA",
-          amt: parseInt(dot20!.inputValue!),
-        })
-      ),
-    ];
 
-    api.tx.utility
-      .batchAll(batchAll)
-      .signAndSend(acc.address, { signer: injector.signer }, (result: any) => {
-        if (result.status.isInBlock) {
-          handleTransition(result);
-          setSwaping(false);
-        }
-      })
-      .catch((error: any) => {
+    try {
+      const api = await getApi();
+      const acc = selectedAccount;
+      if (!api || !acc) {
         setSwaping(false);
-        handleTransitionFail(error);
-      });
+        handleTransitionFail(Error("Api or account login issues"));
+        return;
+      }
+      const injector = await getInjectedAccount();
+      if (!injector) {
+        setSwaping(false);
+        handleTransitionFail(Error("Get injected account error"));
+        return;
+      }
+      const batchAll = [
+        api.tx.balances.transferKeepAlive(address, 0),
+        api.tx.system.remarkWithEvent(
+          JSON.stringify({
+            p: "dot-20",
+            op: "transfer",
+            tick: "DOTA",
+            amt: parseInt(dot20!.inputValue!),
+          })
+        ),
+      ];
+
+      api.tx.utility
+        .batchAll(batchAll)
+        .signAndSend(
+          acc.address,
+          { signer: injector.signer },
+          (result: any) => {
+            if (result.status.isInBlock) {
+              handleTransition(result);
+              setSwaping(false);
+            }
+          }
+        )
+        .catch((error: any) => {
+          setSwaping(false);
+          handleTransitionFail(error);
+        });
+    } catch (error) {
+      setSwaping(false);
+      handleTransitionFail(error as Error);
+    }
   };
   return (
     <>
