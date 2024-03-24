@@ -68,7 +68,7 @@ const TickCard: React.FC<{
 
   return (
     <div className={`rounded-3xl px-6 py-5 ${styles.cardBg}`}>
-      <div className="flex flex-row justify-between">
+      <div className="flex sm:flex-row flex-col justify-between">
         <div className="basis-2/3 flex flex-col">
           <Input
             className="my-3"
@@ -80,7 +80,7 @@ const TickCard: React.FC<{
           />
           {type === "token" ? null : <BalanceRadioGroup type={type} />}
         </div>
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col justify-center sm:m-0 mt-3">
           <SelectTick type={type} />
           {type === "token" ? null : (
             <span className="text-sm mt-5 text-right text-gray">

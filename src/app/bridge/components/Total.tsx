@@ -21,7 +21,7 @@ const Total: React.FC = () => {
 
   return (
     <div className={`${styles.content} text-sm`}>
-      <div className="flex flex-row justify-between mt-3">
+      <div className="flex sm:flex-row flex-col justify-between mt-3">
         <span>Token Address</span>
         <div>
           <span>
@@ -40,7 +40,7 @@ const Total: React.FC = () => {
           ) : null}
         </div>
       </div>
-      <div className="flex flex-row justify-between mt-3">
+      <div className="flex sm:flex-row flex-col justify-between mt-3">
         <span>Total</span>
         <span className="mr-10">
           {dot20?.balance !== undefined

@@ -43,11 +43,11 @@ export default function Home() {
           <Total />
         </div>
         <div
-          className={`mt-5 mb-32 max-w-screen-md text-sm flex flex-row space-x-5 mx-auto`}
+          className={`mt-5 mb-32 max-w-screen-md text-sm flex sm:flex-row flex-col sm:space-x-5 mx-auto`}
         >
           <Button
             radius="full"
-            className={`w-1/2 ${styles.btnGrayBg} hover:bg-sky-700 color-white`}
+            className={`sm:w-1/2 ${styles.btnGrayBg} hover:bg-sky-700 color-white`}
             startContent={
               <Image src={stellaswapIcon} width={24} height={24} alt="tips" />
             }
@@ -56,7 +56,7 @@ export default function Home() {
           </Button>
           <Button
             radius="full"
-            className={`w-1/2 ${styles.btnGrayBg} hover:bg-sky-700 color-white`}
+            className={`sm:w-1/2 sm:mt-0 mt-3 ${styles.btnGrayBg} hover:bg-sky-700 color-white`}
             startContent={
               <Image src={dexscreenerIcon} width={24} height={24} alt="tips" />
             }
