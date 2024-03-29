@@ -9,9 +9,7 @@ import {
 import useBridge from "../hooks/useBridge";
 import { useConnectWallet } from "@/hooks/usePolkadot";
 import { useState } from "react";
-
-// The suggestions go in a.env file
-const address = "5GsmAhN2dKuyijc5qkh9kPJPt8YBLkN1KmYf7QWbsPKhenJd";
+import BridgeConfig from "../config";
 
 const Swap: React.FC = () => {
   const { selectedAccount, getApi, getInjectedAccount } = useConnectWallet();
@@ -47,7 +45,6 @@ const Swap: React.FC = () => {
   };
 
   const handleTransitionFail = (error: Error) => {
-    console.log(error);
     setModalInfo({
       open: true,
       title: "Transition Fail",
@@ -69,12 +66,20 @@ const Swap: React.FC = () => {
   };
 
   const validprops = (): Error | undefined => {
-    const val = dot20?.inputValue ? parseInt(dot20.inputValue) : 0;
-    const balance = dot20?.balance ?? 0;
-    if (val <= 0) {
-      return Error("Please enter a number greater than 0");
+    if (
+      dot20?.inputValue === undefined ||
+      dot20?.inputValue === "" ||
+      dot20!.inputValue!.length <= 0
+    ) {
+      return Error("Please input quantity");
     }
-    if (val > balance) {
+    const val = parseFloat(dot20!.inputValue!) * Math.pow(10, 6);
+    const balance = dot20?.balance ?? 0;
+    if (val < 1 * Math.pow(10, 6)) {
+      return Error("need a minimum of 1,000,000");
+    }
+
+    if (balance <= 0 || val > balance) {
       return Error("Insufficient balance");
     }
     return undefined;
@@ -83,6 +88,7 @@ const Swap: React.FC = () => {
   const handleSwap = async () => {
     setSwaping(true);
     const isvalid = validprops();
+
     if (isvalid !== undefined) {
       setSwaping(false);
       handleTransitionFail(isvalid);
@@ -104,13 +110,13 @@ const Swap: React.FC = () => {
         return;
       }
       const batchAll = [
-        api.tx.balances.transferKeepAlive(address, 0),
+        api.tx.balances.transferKeepAlive(BridgeConfig.BROKER_ADDRESS, 0),
         api.tx.system.remarkWithEvent(
           JSON.stringify({
             p: "dot-20",
             op: "transfer",
             tick: "DOTA",
-            amt: parseInt(dot20!.inputValue!),
+            amt: parseFloat(dot20!.inputValue!) * Math.pow(10, 6),
           })
         ),
       ];

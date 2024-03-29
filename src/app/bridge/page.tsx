@@ -5,7 +5,6 @@ import Image from "next/image";
 import { Button } from "@nextui-org/react";
 
 import styles from "./index.module.css";
-import TickCard from "./components/TickCard";
 import tipsIcon from "@/icons/tips.svg";
 import stellaswapIcon from "@/icons/stellaswap.svg";
 import dexscreenerIcon from "@/icons/dexscreener.png";
@@ -13,6 +12,8 @@ import Total from "./components/Total";
 import Swap from "./components/Swap";
 
 import { BridgeRoot } from "./hooks/BridgeRoot";
+import Dot20Card from "./components/Dot20Card";
+import TokenCard from "./components/TokenCard";
 
 export default function Home() {
   return (
@@ -22,9 +23,9 @@ export default function Home() {
         <p className={styles.subTitle}>Swap Dota as token</p>
         <div className={styles.content}>
           <h2 className="text-center mb-5">Bridge</h2>
-          <TickCard type="dot20" />
+          <Dot20Card />
           <div className={`mt-2 ${styles.swapTickBox}`}>
-            <TickCard type="token" />
+            <TokenCard />
           </div>
           <div className="flex flex-row justify-between mt-3 text-sm">
             <span>1 DOTA (dot-20) = 1 DOTA (token)</span>
@@ -35,7 +36,7 @@ export default function Home() {
             <Image src={tipsIcon} width={16} height={16} alt="tips" />
             <p className="text-xs text-gray ml-1.5">
               To swap Dota(token) to Dota (dot-20) or vice versa, you need a
-              minimum of 10.
+              minimum of 1,000,000
             </p>
           </div>
         </div>

@@ -5,10 +5,11 @@ import styles from "../index.module.css";
 import { Button } from "@nextui-org/react";
 import Image from "next/image";
 import copyIcon from "@/icons/copy.svg";
+import { useMemo } from "react";
 
 const Total: React.FC = () => {
   const { selectedAccount } = useConnectWallet();
-  const { dot20 } = useBridge();
+  const { dot20, token } = useBridge();
 
   const handleCopy = async (text: string) => {
     try {
@@ -18,6 +19,14 @@ const Total: React.FC = () => {
       console.error("Unable to copy text: ", err);
     }
   };
+
+  const getTotal = useMemo(() => {
+    if (dot20?.balance !== undefined && token?.balance !== undefined) {
+      return formatNumberWithCommas(dot20.balance + token?.balance);
+    } else {
+      return "~";
+    }
+  }, [dot20?.balance, token?.balance]);
 
   return (
     <div className={`${styles.content} text-sm`}>
@@ -43,9 +52,7 @@ const Total: React.FC = () => {
       <div className="flex sm:flex-row flex-col justify-between mt-3">
         <span>Total</span>
         <span className="mr-10">
-          {dot20?.balance !== undefined
-            ? formatNumberWithCommas(dot20.balance)
-            : "~"}
+          {getTotal}
           {dot20?.balance !== undefined && dot20.tick
             ? ` ${dot20.tick.toUpperCase()}`
             : ""}
