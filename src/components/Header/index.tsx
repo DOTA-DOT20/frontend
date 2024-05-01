@@ -26,11 +26,14 @@ import currencyIcon from "@/icons/currency.svg";
 import starIcon from "@/icons/star.svg";
 import compassIcon from "@/icons/compass.svg";
 import bridgeIcon from "@/icons/bridge.svg";
+import stakeIcon from "@/icons/stake.svg";
+import swapNavIcon from "@/icons/swap-nav.svg";
 
 import { useConnectWallet } from "@/hooks/usePolkadot";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import arrowIcon from "@/icons/arrow-down.svg";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 const menus = [
   {
@@ -65,6 +68,16 @@ const menus = [
     route: "/bridge/",
     icon: bridgeIcon,
   },
+  {
+    name: "STAKE",
+    route: "/stake/",
+    icon: stakeIcon,
+  },
+  {
+    name: "SWAP",
+    route: "/swap/",
+    icon: swapNavIcon,
+  },
 ];
 
 function shotAddress(address: string) {
@@ -73,6 +86,7 @@ function shotAddress(address: string) {
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathName = usePathname();
 
   const { allAccounts, selectedAccount, setSelectedAccount, connect } =
     useConnectWallet();
@@ -138,53 +152,62 @@ export default function Header() {
           );
         })}
       </NavbarContent>
-      <NavbarContent justify="end">
-        <NavbarItem>
-          {selectedAccount ? (
-            <Dropdown>
-              <DropdownTrigger>
-                <Button className="btn bg-pink-500 hover:bg-sky-700 color-white">
-                  <span>
-                    {selectedAccount.meta.name}
-                    <span className="hidden md:inline">
-                      {" "}
-                      [ {shotAddress(selectedAccount.address)} ]
+      {["/stake/", "/swap/"].includes(pathName) ? (
+        <div className="ml-5"></div>
+      ) : (
+        <NavbarContent justify="end">
+          <NavbarItem>
+            {selectedAccount ? (
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button className="btn bg-pink-500 hover:bg-sky-700 color-white">
+                    <span>
+                      {selectedAccount.meta.name}
+                      <span className="hidden md:inline">
+                        {" "}
+                        [ {shotAddress(selectedAccount.address)} ]
+                      </span>
                     </span>
-                  </span>
-                  {allAccounts.length > 1 && (
-                    <Image src={arrowIcon} width={12} height={12} alt="arrow" />
-                  )}
-                </Button>
-              </DropdownTrigger>
+                    {allAccounts.length > 1 && (
+                      <Image
+                        src={arrowIcon}
+                        width={12}
+                        height={12}
+                        alt="arrow"
+                      />
+                    )}
+                  </Button>
+                </DropdownTrigger>
 
-              <DropdownMenu
-                aria-label="Static Accounts"
-                variant="flat"
-                selectionMode="single"
-                selectedKeys={selectedAccount.address}
-                onSelectionChange={handleSelectAccount}
+                <DropdownMenu
+                  aria-label="Static Accounts"
+                  variant="flat"
+                  selectionMode="single"
+                  selectedKeys={selectedAccount.address}
+                  onSelectionChange={handleSelectAccount}
+                >
+                  {allAccounts.map((account) => (
+                    <DropdownItem
+                      key={account.address}
+                      onClick={() => setSelectedAccount(account)}
+                    >
+                      {account.meta.name}
+                      <span> [ {shotAddress(account.address)} ]</span>
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
+            ) : (
+              <Button
+                className="btn bg-pink-500 hover:bg-sky-700 color-white"
+                onClick={handleConnect}
               >
-                {allAccounts.map((account) => (
-                  <DropdownItem
-                    key={account.address}
-                    onClick={() => setSelectedAccount(account)}
-                  >
-                    {account.meta.name}
-                    <span> [ {shotAddress(account.address)} ]</span>
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-          ) : (
-            <Button
-              className="btn bg-pink-500 hover:bg-sky-700 color-white"
-              onClick={handleConnect}
-            >
-              Connect Wallet
-            </Button>
-          )}
-        </NavbarItem>
-      </NavbarContent>
+                Connect Wallet
+              </Button>
+            )}
+          </NavbarItem>
+        </NavbarContent>
+      )}
       <NavbarMenu>
         {menus.map((item, index) => (
           <NavbarMenuItem key={`${item.route}-${index}`}>
