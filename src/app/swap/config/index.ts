@@ -11,15 +11,15 @@ if (!projectId) throw new Error("Project ID is not defined");
 
 const metadata = {
   name: "DOTA-dot20",
-  description: "DOTA-dot20",
-  url: "https://web3modal.com", // origin must match your domain & subdomain
-  icons: ["https://dota.fyi/favicon.svg"],
+  description: "DOTA - DOT20 inscription",
+  url: "https://dota.meme", // origin must match your domain & subdomain
+  icons: ["https://dota.meme/favicon.svg"],
 };
 
 export const dotaEvmChain = defineChain({
   id: 1888,
   name: "DOTA-EVM",
-  nativeCurrency: { name: "EVM-DOTA", symbol: "DOTA", decimals: 18 },
+  nativeCurrency: { name: "EVM-DOTA", symbol: "eDOTA", decimals: 18 },
   rpcUrls: {
     default: {
       http: ["https://fraa-flashbox-2879-rpc.a.stagenet.tanssi.network"],

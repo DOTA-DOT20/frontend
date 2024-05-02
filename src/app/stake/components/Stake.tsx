@@ -118,7 +118,7 @@ const Stake: React.FC = () => {
   return (
     <>
       <Button
-        isDisabled={!selectedAccount?.address}
+        isDisabled={true}
         isLoading={staking}
         className={`btn btn-large mt-8 bg-pink-500 hover:bg-sky-700 color-white`}
         fullWidth

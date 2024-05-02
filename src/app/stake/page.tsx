@@ -46,7 +46,7 @@ export default function Home() {
               track: "bg-gray",
               mark: "text-gray text-xs",
             }}
-            label="Available DOTA：100,000"
+            label="Available DOTA：0"
             getValue={(val) => `${val} %`}
             defaultValue={50}
           />
@@ -56,14 +56,14 @@ export default function Home() {
           <div className="flex sm:flex-row flex-col justify-between mt-1">
             <span className="text-gray text-sm">You will receive</span>
             <span className="text-gray-light text-base">
-              {(1765.89).toLocaleString("en-US")}{" "}
+              {(0).toLocaleString("en-US")}{" "}
               <span className="text-gray text-xs">ERC-20 DOTA</span>
             </span>
           </div>
           <div className="flex sm:flex-row flex-col justify-between mt-1">
             <span className="text-gray text-sm">Exchange rate</span>
             <span className="text-gray-light text-base">
-              1 <span className="text-gray text-xs">DOTA</span> = 1{" "}
+              0 <span className="text-gray text-xs">DOTA</span> = 0{" "}
               <span className="text-gray text-xs">ERC-20 DOTA</span>
             </span>
           </div>
@@ -76,7 +76,7 @@ export default function Home() {
           <div className="flex sm:flex-row flex-col justify-between mt-1">
             <span className="text-gray text-sm">Reward fee</span>
             <span className="text-gray-light text-base">
-              5.75 <span className="text-gray text-xs">%</span>
+              0 <span className="text-gray text-xs">%</span>
             </span>
           </div>
         </div>
@@ -89,18 +89,18 @@ export default function Home() {
         <div className="flex sm:flex-row flex-col justify-between mt-1">
           <span className="text-gray text-sm">Annual percentage rate</span>
           <span className="text-gray-light text-base">
-            3.25 <span className="text-gray text-xs">%</span>
+            0 <span className="text-gray text-xs">%</span>
           </span>
         </div>
         <div className="flex sm:flex-row flex-col justify-between mt-1">
           <span className="text-gray text-sm">Total staked</span>
           <span className="text-gray-light text-base">
-            178,987,654.67 <span className="text-gray text-xs">DOTA</span>
+            0 <span className="text-gray text-xs">DOTA</span>
           </span>
         </div>
         <div className="flex sm:flex-row flex-col justify-between mt-1">
           <span className="text-gray text-sm">Stakers</span>
-          <span className="text-gray-light text-base">58,977</span>
+          <span className="text-gray-light text-base">0</span>
         </div>
       </div>
       {/* FAQ card */}
@@ -108,7 +108,8 @@ export default function Home() {
         <p className={styles.subTitle}>FAQ</p>
       </div>
       <div className={styles.content}>
-        <Accordion>
+        Future
+        {/* <Accordion>
           <AccordionItem key="1" aria-label="Questions 1" title="Questions 1">
             {defaultContent}
           </AccordionItem>
@@ -118,7 +119,7 @@ export default function Home() {
           <AccordionItem key="3" aria-label="Questions 3" title="Questions 3">
             {defaultContent}
           </AccordionItem>
-        </Accordion>
+        </Accordion> */}
       </div>
     </div>
   );

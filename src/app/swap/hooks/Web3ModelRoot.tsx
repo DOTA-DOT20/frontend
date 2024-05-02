@@ -23,7 +23,7 @@ createWeb3Modal({
   defaultChain: dotaEvmChain,
   enableWalletFeatures: true,
   chainImages: {
-    1888: "https://dota.fyi/favicon.svg",
+    1888: "https://dota.meme/favicon.svg",
   },
   featuredWalletIds: [
     "c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96",
